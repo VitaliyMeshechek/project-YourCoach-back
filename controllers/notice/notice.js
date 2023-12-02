@@ -5,17 +5,6 @@ const gravatar = require("gravatar");
 const { User } = require("../../models/userSchema");
 
 const createNotice = async (req, res, next) => {
-  // let noticeAvatarURL = null;
-
-  // if (req.file) {
-  //   const { email } = req.user;
-  //   const avatarURL = gravatar.url(email, {
-  //     s: "200",
-  //     r: "pg",
-  //     d: "mm",
-  //   });
-  //   noticeAvatarURL = avatarURL;
-  // }
   const { email } = req.user;
   const { _id: owner } = req.user;
   const { categoryName } = req.params; // Get the category from req.query instead of req.body
