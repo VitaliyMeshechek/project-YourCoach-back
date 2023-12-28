@@ -6,7 +6,7 @@ const { HttpError, ctrlWrapper } = require("../../helpers");
 const path = require("path");
 
 const { User } = require("../../models/userSchema");
-const { Pet } = require("../../models/petSchema");
+const { Pet } = require("../../models/programSchema");
 
 require("dotenv").config();
 const { SECRET_KEY, BASE_URL } = process.env;

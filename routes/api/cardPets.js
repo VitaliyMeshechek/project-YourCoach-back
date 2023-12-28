@@ -5,7 +5,7 @@ const ctrl = require("../../controllers/cardPets");
 
 const { ctrlWrapper } = require("../../helpers");
 
-const { petSchemas } = require("../../models/petSchema");
+const { petSchemas } = require("../../models/programSchema");
 const { schemas } = require("../../models/userSchema");
 
 const {

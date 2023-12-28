@@ -31,7 +31,7 @@ const userSchema = new Schema(
       match: nameFormat,
       default: null,
     },
-    birthday: {
+    experience: {
       type: String,
       match: dateFormat,
       default: null,
@@ -55,7 +55,8 @@ const userSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    favorite: [],
+    like: [],
+    dislike: [],
     verify: {
       type: Boolean,
       default: false,
@@ -78,7 +79,7 @@ const registerSchema = Joi.object({
       tlds: { allow: ["com", "net", "ukr", "ua"] },
     }),
   password: Joi.string().pattern(passwordFormat).min(6).max(16).required(),
-  name: Joi.string().min(1).pattern(nameFormat),
+  name: Joi.string().min(2).pattern(nameFormat),
 });
 
 const emailSchema = Joi.object({
@@ -100,14 +101,14 @@ const loginSchema = Joi.object({
     "match the input format. Example of input: ivanov@gmail.com"
   ),
   password: Joi.string().min(6).max(16).pattern(passwordFormat).required(),
-  name: Joi.string().min(1).pattern(nameFormat),
+  name: Joi.string().min(2).pattern(nameFormat),
   phone: Joi.string().pattern(phoneFormat),
 });
 
 const updateUserSchema = Joi.object({
-  name: Joi.string().min(1).pattern(nameFormat).optional(),
+  name: Joi.string().min(2).pattern(nameFormat).optional(),
   email: Joi.string().pattern(emailFormat).min(10).max(63).optional(),
-  birthday: Joi.string().pattern(dateFormat).optional(),
+  experience: Joi.string().pattern(dateFormat).optional(),
   phone: Joi.string().pattern(phoneFormat).optional(),
   city: Joi.string().pattern(cityFormat).optional(),
   avatarUrl: Joi.string().optional(),

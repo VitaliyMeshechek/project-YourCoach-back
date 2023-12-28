@@ -12,7 +12,12 @@ const noticeSchema = new Schema(
     },
     category: {
       type: String,
-      enum: ["in-good-hands", "lost-found", "sell"],
+      enum: [
+        "fitnes for women",
+        "weigth",
+        "strength fitness",
+        "flexibility and wellness",
+      ],
     },
     birthday: {
       type: String,

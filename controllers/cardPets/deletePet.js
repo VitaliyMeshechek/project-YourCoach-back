@@ -1,4 +1,4 @@
-const { Pet } = require("../../models/petSchema");
+const { Pet } = require("../../models/programSchema");
 const { HttpError } = require("../../helpers");
 
 const deletePet = async (req, res) => {
