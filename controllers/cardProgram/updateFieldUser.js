@@ -1,18 +1,18 @@
-const { uploadCloudinary } = require("../../helpers/uploadCloudinary");
+// const { uploadCloudinary } = require("../../helpers/uploadCloudinary");
 const { User } = require("../../models/userSchema");
 // const gravatar = require("gravatar");
 
-const { HttpError } = require("../../helpers");
+// const { HttpError } = require("../../helpers");
 
 const updateFieldUser = async (req, res) => {
-  const { name, email, phone, city, birthday, firstLogin, image, avatarUrl } =
+  const { name, email, phone, city, experience, firstLogin, image, avatarUrl } =
     req.body;
   const { _id } = req.user;
   //   const { id } = req.params;
   if (!req.file) {
     const user = await User.findByIdAndUpdate(
       _id,
-      { ...req.body },
+      { ...name, email, phone, city, experience, firstLogin, image, avatarUrl },
       {
         new: true,
       }
@@ -25,7 +25,7 @@ const updateFieldUser = async (req, res) => {
           email: user.email,
           city: user.city,
           phone: user.phone,
-          birthday: user.birthday,
+          experience: user.experience,
           firstLogin: user.firstLogin,
         },
       },
@@ -33,7 +33,16 @@ const updateFieldUser = async (req, res) => {
   } else {
     const user = await User.findOneAndUpdate(
       _id,
-      { ...req.body, avatarUrl: req.file.path },
+      {
+        ...name,
+        email,
+        phone,
+        city,
+        experience,
+        firstLogin,
+        image,
+        avatarUrl: req.file.path,
+      },
       {
         new: true,
       }
@@ -47,7 +56,7 @@ const updateFieldUser = async (req, res) => {
           email: user.email,
           city: user.city,
           phone: user.phone,
-          birthday: user.birthday,
+          experience: user.experience,
           firstLogin: user.firstLogin,
         },
       },

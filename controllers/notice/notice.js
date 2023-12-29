@@ -1,11 +1,11 @@
-const { Notice } = require("../../models/notice");
+const { Coach } = require("../../models/coachesProgramsSchema");
 
 const { HttpError } = require("../../helpers/HttpError");
-const gravatar = require("gravatar");
+// const gravatar = require("gravatar");
 const { User } = require("../../models/userSchema");
 
 const createNotice = async (req, res, next) => {
-  const { email } = req.user;
+  // const { email } = req.user;
   const { _id: owner } = req.user;
   const { categoryName } = req.params; // Get the category from req.query instead of req.body
 
@@ -13,7 +13,7 @@ const createNotice = async (req, res, next) => {
     return res.status(400).json({ error: "Category is required" });
   }
 
-  const notice = await Notice.create([
+  const coach = await Coach.create([
     {
       ...req.body,
       avatarUrl: req.file.path,
@@ -22,50 +22,50 @@ const createNotice = async (req, res, next) => {
     },
   ]);
 
-  res.status(200).json({ notice, message: "Successfully" });
+  res.status(200).json({ coach, message: "Successfully" });
 };
 
-const addNoticeFavorite = async (req, res) => {
+const addCoachRating = async (req, res) => {
   const { _id: userId } = req.user;
   const { id } = req.params;
 
-  const notice = await Notice.findOne({ _id: id });
+  const coach = await Coach.findOne({ _id: id });
 
-  if (!notice) {
-    return res.status(404).json({ message: "Notice not found" });
+  if (!coach) {
+    return res.status(404).json({ message: "Coach not found" });
   }
 
-  const favorite = notice.favorite || [];
+  const rating = coach.rating || [];
 
-  if (favorite.includes(userId)) {
-    throw new Error("Notice already added to favorites");
+  if (rating.includes(userId)) {
+    throw new Error("Coach already added to ratings");
   }
 
   await User.findByIdAndUpdate(userId, {
-    $push: { favorite: { ...notice._doc, id } },
+    $push: { rating: { ...coach._doc, id } },
   });
 
   res.status(200).json({
-    favorite: favorite.concat({ userId, ...notice._doc }),
+    rating: rating.concat({ userId, ...coach._doc }),
     message: "Success",
   });
 };
 
-const deleteNoticeFavorite = async (req, res, next) => {
-  const { _id: userId, favorite } = req.user;
+const deleteCoachRating = async (req, res, next) => {
+  const { _id: userId, rating } = req.user;
   const { id } = req.params;
 
-  const existingNotice = favorite.find((item) => item.id === id);
+  const existingCoach = rating.find((item) => item.id === id);
 
-  if (!existingNotice) {
+  if (!existingCoach) {
     return res.status(409).json({
-      message: "The notice is not in the favorites",
+      message: "The coach is not in the rating",
     });
   }
 
   const updatedUser = await User.findByIdAndUpdate(
     userId,
-    { $pull: { favorite: { id } } },
+    { $pull: { rating: { id } } },
     { new: true }
   );
 
@@ -74,34 +74,34 @@ const deleteNoticeFavorite = async (req, res, next) => {
   }
 
   res.status(200).json({
-    favorite: updatedUser.favorite,
+    rating: updatedUser.rating,
     id,
-    message: "Successfully removed from favorites",
+    message: "Successfully removed from rating",
   });
 };
 
-const deleteUserNotice = async (req, res, next) => {
+const deleteUserCoachProgram = async (req, res, next) => {
   const { _id: userId } = req.user;
 
   const { id } = req.params;
 
-  const delNotice = await Notice.findOne({ _id: id });
+  const deleteCoach = await Coach.findOne({ _id: id });
 
-  if (!delNotice) {
-    throw HttpError(404, "Notice does not exist");
+  if (!deleteCoach) {
+    throw HttpError(404, "Coach program does not exist");
   }
 
-  await Notice.findOneAndRemove({ _id: id, owner: userId });
+  await Coach.findOneAndRemove({ _id: id, owner: userId });
 
-  res.status(200).json({ message: "Notice successfully deleted" });
+  res.status(200).json({ message: "Coach program successfully deleted" });
 };
 
-const getNoticeByCategory = async (req, res) => {
+const getCoachProgramByCategory = async (req, res) => {
   const { categoryName: category, id } = req.params;
   const { query: title, page, limit } = req.query;
   const skip = (page - 1) * limit;
   if (!title && !category) {
-    const allNotices = await Notice.find(
+    const allCoachesPrograms = await Coach.find(
       {},
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -109,9 +109,9 @@ const getNoticeByCategory = async (req, res) => {
         limit,
       }
     );
-    res.status(200).json(allNotices);
+    res.status(200).json(allCoachesPrograms);
   } else if (category && !title && !id) {
-    const noticesByCategory = await Notice.find(
+    const coachesProgramsByCategory = await Coach.find(
       { category },
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -119,10 +119,10 @@ const getNoticeByCategory = async (req, res) => {
         limit,
       }
     );
-    res.status(200).json(noticesByCategory);
+    res.status(200).json(coachesProgramsByCategory);
   } else if (category && title && !id) {
     const regex = new RegExp(title, "i");
-    const notices = await Notice.find(
+    const coaches = await Coach.find(
       { category, title: { $regex: regex } },
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -130,10 +130,10 @@ const getNoticeByCategory = async (req, res) => {
         limit,
       }
     );
-    res.status(200).json(notices);
+    res.status(200).json(coaches);
   } else if (category && title && id) {
     const regex = new RegExp(title, "i");
-    const notices = await Notice.find(
+    const coaches = await Coach.find(
       { category, title: { $regex: regex }, _id: id },
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -141,9 +141,9 @@ const getNoticeByCategory = async (req, res) => {
         limit,
       }
     );
-    res.status(200).json(notices);
+    res.status(200).json(coaches);
   } else if (id) {
-    const notice = await Notice.findById(
+    const coach = await Coach.findById(
       id,
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -151,54 +151,50 @@ const getNoticeByCategory = async (req, res) => {
         limit,
       }
     );
-    if (notice) {
-      res.status(200).json([notice]);
+    if (coach) {
+      res.status(200).json([coach]);
     } else {
-      res.status(404).json({ error: "Notice not found" });
+      res.status(404).json({ error: "Coach program not found" });
     }
   } else {
     res.status(400).json({ error: "No search parameters provided" });
   }
 };
 
-const getUserByFavorite = async (req, res) => {
+const getUserByRating = async (req, res) => {
   const { _id: userId } = req.user;
-  const notices = await User.findById(userId)
-    .populate("favorite")
-    .select("favorite");
+  const coaches = await User.findById(userId)
+    .populate("rating")
+    .select("rating");
 
-  res.status(200).json(notices.favorite);
+  res.status(200).json(coaches.rating);
 };
 
-const getUserByNotices = async (req, res) => {
+const getUserByCoaches = async (req, res) => {
   const { _id: userId } = req.user;
   const { page, limit } = req.query;
   const skip = (page - 1) * limit;
 
-  const notices = await Notice.find(
-    { owner: userId },
-    "-createdAt -updatedAt",
-    {
-      skip,
-      limit,
-    }
-  );
+  const coaches = await Coach.find({ owner: userId }, "-createdAt -updatedAt", {
+    skip,
+    limit,
+  });
 
-  res.status(200).json(notices);
+  res.status(200).json(coaches);
 };
 
-const getAllNotices = async (req, res) => {
-  const notices = await Notice.find();
-  res.status(200).json(notices);
+const getAllCoaches = async (req, res) => {
+  const coaches = await Coach.find();
+  res.status(200).json(coaches);
 };
 
 module.exports = {
-  getUserByNotices,
-  getNoticeByCategory,
+  getUserByCoaches,
+  getCoachProgramByCategory,
   createNotice,
-  addNoticeFavorite,
-  getUserByFavorite,
-  deleteNoticeFavorite,
-  deleteUserNotice,
-  getAllNotices,
+  addCoachRating,
+  getUserByRating,
+  deleteCoachRating,
+  deleteUserCoachProgram,
+  getAllCoaches,
 };

@@ -6,7 +6,7 @@ const { handleMongooseError } = require("../helpers");
 
 // eslint-disable-next-line no-useless-escape
 const emailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-const nameFormat = /^([A-Za-z\-\']{1,20})|([А-Яа-я\-\']{1,20})$/;
+const nameFormat = /^[а-яА-ЯёЁa-zA-Z0-9]{1,20}$/;
 const passwordFormat = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\s).*$/;
 const dateFormat =
   /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/;
@@ -55,8 +55,7 @@ const userSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    like: [],
-    dislike: [],
+    rating: [],
     verify: {
       type: Boolean,
       default: false,

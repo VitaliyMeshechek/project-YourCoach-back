@@ -1,20 +1,16 @@
 const bcrypt = require("bcrypt");
-const gravatar = require("gravatar");
 const jwt = require("jsonwebtoken");
 
 const { HttpError, ctrlWrapper } = require("../../helpers");
-const path = require("path");
 
 const { User } = require("../../models/userSchema");
-const { Pet } = require("../../models/programSchema");
+// const { Program } = require("../../models/programSchema");
 
 require("dotenv").config();
-const { SECRET_KEY, BASE_URL } = process.env;
-
-const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
-  const { name, email, password, firstLogin } = req.body;
+  const { email, password } = req.body;
 
   const userFindEmail = await User.findOne({ email });
   if (userFindEmail) {
@@ -54,7 +50,7 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { name, email, password, avatarUrl, firstLogin } = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
@@ -77,7 +73,7 @@ const login = async (req, res) => {
       email: user.email,
       name: user.name,
       avatarUrl: user.avatarUrl,
-      birthday: user.birthday,
+      experience: user.experience,
       city: user.city,
       phone: user.phone,
       firstLogin: user.firstLogin,
@@ -107,7 +103,7 @@ const getFindUsers = async (req, res) => {
 };
 
 const getCurrentUser = async (req, res) => {
-  const { name, email, phone, city, birthday, avatarUrl, _id } = req.user;
+  const { name, email, phone, city, experience, avatarUrl, _id } = req.user;
 
   res.status(200).json({
     user: {
@@ -115,7 +111,7 @@ const getCurrentUser = async (req, res) => {
       name,
       phone,
       city,
-      birthday,
+      experience,
       avatarUrl,
       _id,
     },

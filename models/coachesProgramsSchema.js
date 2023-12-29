@@ -1,11 +1,10 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
+const nameFormat = /^[а-яА-ЯёЁa-zA-Z0-9]{1,20}$/;
 // eslint-disable-next-line no-useless-escape
 const textFormat = /^([A-Za-z\-\']{1,400})|([А-Яа-я\-\']{1,400})$/;
 
-const { handleMongooseError } = require("../helpers");
-
-const programSchema = new Schema(
+const coachProgramSchema = new Schema(
   {
     name: {
       type: String,
@@ -15,52 +14,42 @@ const programSchema = new Schema(
         "Оздоровчі програми",
         "Функціональний фітнес",
       ],
-      required: false,
     },
     fitnessWeigth: {
       type: String,
       enum: ["Аеробіка", "Аеробний фітнес"],
-      required: false,
     },
     fitnessStrength: {
       type: String,
       enum: ["Body Up", "Body Low", "Body Pump", "Body Sculpt", "ABS"],
-      required: false,
     },
     fitnessWellness: {
       type: String,
       enum: ["Yoga", "Pilates", "Stretching"],
-      required: false,
     },
     aerobic: {
       type: String,
       enum: ["Step aerobics", "Fitball Aerobics", "Another"],
-      required: false,
     },
     strong: {
       type: String,
       enum: ["Body up", "Body pump", "Тренування ABS"],
-      required: false,
     },
     health: {
       type: String,
       enum: ["Йога", "Пілатес", "Ци-гун", "Стретчінг", "Калланетіка"],
-      required: false,
     },
     functions: {
       type: String,
       enum: ["Zumba", "Dance Fitness", "Belly Dance", "Strip Dance", "Інше"],
-      required: false,
     },
     step: {
       type: String,
       enum: ["Step-Intro", "Step-B", "Power-Step", "Strip Dance", "Інше"],
-      required: false,
     },
     impact: {
       type: String,
       enum: ["Low-Impact Aerobics", "Low-A", "Middle-Impact", "High-Impact"],
-      required: false,
     },
     special: {
       type: String,
@@ -69,7 +58,6 @@ const programSchema = new Schema(
         "Консультація або порада дієтолога",
         "Можливість тренування старших груп",
       ],
-      required: false,
     },
     food: {
       type: String,
@@ -77,12 +65,10 @@ const programSchema = new Schema(
         "Продукти тваринного походження",
         "Продукти рослинного походження",
       ],
-      required: false,
     },
     description: {
       type: String,
       match: textFormat,
-      required: false,
     },
     duration: {
       type: String,
@@ -93,28 +79,14 @@ const programSchema = new Schema(
         "12-15 тижнів",
         "більше 15 тижнів",
       ],
-      required: false,
     },
     training: {
       type: String,
       enum: ["Персональні тренування", "Групові тренування"],
-      required: false,
     },
-    avatarUrl: {
+    title: {
       type: String,
-      required: false,
-    },
-    location: {
-      type: String,
-      required: false,
-    },
-    price: {
-      type: Number,
-    },
-    comments: {
-      type: String,
-      match: textFormat,
-      required: false,
+      minlength: 2,
     },
     category: {
       type: String,
@@ -125,21 +97,33 @@ const programSchema = new Schema(
         "flexibility and wellness",
       ],
     },
-    firstLogin: {
-      type: Boolean,
-      default: false,
+    location: {
+      type: String,
+      required: [true, "City/region is required"],
+    },
+    comments: {
+      type: String,
+      match: textFormat,
+    },
+    price: {
+      type: Number,
+    },
+    avatarUrl: {
+      type: String,
     },
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
+      require: true,
     },
   },
-  { versionKey: false, timestamps: true }
+
+  {
+    versionKey: false,
+  }
 );
 
-programSchema.post("save", handleMongooseError);
-
-const programAddSchema = Joi.object({
+const coachesProgramsSchema = Joi.object({
   name: Joi.string(),
   fitnessWeigth: Joi.string(),
   fitnessStrength: Joi.string(),
@@ -152,24 +136,20 @@ const programAddSchema = Joi.object({
   impact: Joi.string(),
   special: Joi.string(),
   food: Joi.string(),
-  description: Joi.string().min(10).max(400).pattern(textFormat),
+  description: Joi.string(),
   duration: Joi.string(),
   training: Joi.string(),
+  title: Joi.string().regex(nameFormat).trim().min(2).required(),
+  category: Joi.string(),
+  location: Joi.string().regex(nameFormat).required(),
+  comments: Joi.string().min(2).max(200).required(),
+  price: Joi.string().regex(/^(?!0\d)\d+(?:\.\d{1,2})?$/),
   avatarUrl: Joi.string(),
-  location: Joi.string(),
-  price: Joi.number(),
-  comments: Joi.string().min(10).max(400).pattern(textFormat),
-  category: Joi.string().trim(true).min(8).max(120).optional(),
-  firstLogin: Joi.boolean(),
 });
 
-const programsSchemas = {
-  programAddSchema,
-};
-
-const Program = model("program", programSchema);
+const Coach = model("coach", coachProgramSchema);
 
 module.exports = {
-  Program,
-  programsSchemas,
+  Coach,
+  coachesProgramsSchema,
 };

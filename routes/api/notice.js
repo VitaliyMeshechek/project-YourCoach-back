@@ -8,42 +8,47 @@ const {
   authenticate,
   upload,
 } = require("../../middlewares");
-const { noticesSchema } = require("../../models/notice");
+const { coachesProgramsSchema } = require("../../models/coachesProgramsSchema");
 const {
-  getUserByNotices,
-  getNoticeByCategory,
+  getUserByCoaches,
+  getCoachProgramByCategory,
   createNotice,
-  addNoticeFavorite,
-  getUserByFavorite,
-  deleteNoticeFavorite,
-  deleteUserNotice,
-  getAllNotices,
+  addCoachRating,
+  getUserByRating,
+  deleteCoachRating,
+  deleteUserCoachProgram,
+  getAllCoaches,
 } = require("../../controllers/notice/notice");
-router.get("/", ctrlWrapper(getAllNotices));
-router.get("/own", authenticate, ctrlWrapper(getUserByNotices));
-router.get("/favorite", authenticate, ctrlWrapper(getUserByFavorite));
-router.get("/:categoryName/:id?", ctrlWrapper(getNoticeByCategory));
+router.get("/", ctrlWrapper(getAllCoaches));
+router.get("/own", authenticate, ctrlWrapper(getUserByCoaches));
+router.get("/rating", authenticate, ctrlWrapper(getUserByRating));
+router.get("/:categoryName/:id?", ctrlWrapper(getCoachProgramByCategory));
 
 router.post(
   "/:categoryName",
   authenticate,
   upload.single("avatar"),
-  validateBody(noticesSchema),
+  validateBody(coachesProgramsSchema),
   ctrlWrapper(createNotice)
 );
 router.post(
-  "/favorite/:id",
+  "/rating/:id",
   isValidId,
   authenticate,
-  ctrlWrapper(addNoticeFavorite)
+  ctrlWrapper(addCoachRating)
 );
 
 router.delete(
-  "/favorite/:id",
+  "/rating/:id",
   isValidId,
   authenticate,
-  ctrlWrapper(deleteNoticeFavorite)
+  ctrlWrapper(deleteCoachRating)
 );
-router.delete("/:id", isValidId, authenticate, ctrlWrapper(deleteUserNotice));
+router.delete(
+  "/:id",
+  isValidId,
+  authenticate,
+  ctrlWrapper(deleteUserCoachProgram)
+);
 
 module.exports = router;

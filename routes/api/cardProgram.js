@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const ctrl = require("../../controllers/cardPets");
+const ctrl = require("../../controllers/cardProgram");
 
 const { ctrlWrapper } = require("../../helpers");
 
-const { petSchemas } = require("../../models/programSchema");
+const { programsSchemas } = require("../../models/programSchema");
 const { schemas } = require("../../models/userSchema");
 
 const {
@@ -16,14 +16,19 @@ const {
 } = require("../../middlewares");
 
 router.post(
-  "/pet",
+  "/program",
   authenticate,
-  validateBody(petSchemas.petAddSchema),
+  validateBody(programsSchemas.programAddSchema),
   upload.single("avatar"),
-  ctrlWrapper(ctrl.addPet)
+  ctrlWrapper(ctrl.addCoachProgram)
 );
 
-router.delete("/pet/:id", authenticate, isValidId, ctrlWrapper(ctrl.deletePet));
+router.delete(
+  "/program/:id",
+  authenticate,
+  isValidId,
+  ctrlWrapper(ctrl.deleteCoachProgram)
+);
 
 router.get("/", authenticate, ctrlWrapper(ctrl.getCurrent));
 
