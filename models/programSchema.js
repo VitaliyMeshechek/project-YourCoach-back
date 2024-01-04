@@ -102,7 +102,7 @@ const programSchema = new Schema(
     },
     avatarUrl: {
       type: String,
-      required: false,
+      required: true,
     },
     location: {
       type: String,
@@ -119,11 +119,20 @@ const programSchema = new Schema(
     category: {
       type: String,
       enum: [
+        "your program",
         "fitnes for women",
         "weigth",
         "strength fitness",
         "flexibility and wellness",
       ],
+    },
+    nameYourProgram: {
+      type: String,
+      required: true,
+    },
+    typeYourProgram: {
+      type: String,
+      required: true,
     },
     firstLogin: {
       type: Boolean,
@@ -140,26 +149,28 @@ const programSchema = new Schema(
 programSchema.post("save", handleMongooseError);
 
 const programAddSchema = Joi.object({
-  name: Joi.string(),
-  fitnessWeigth: Joi.string(),
-  fitnessStrength: Joi.string(),
-  fitnessWellness: Joi.string(),
-  aerobic: Joi.string(),
-  strong: Joi.string(),
-  health: Joi.string(),
-  functions: Joi.string(),
-  step: Joi.string(),
-  impact: Joi.string(),
-  special: Joi.string(),
-  food: Joi.string(),
+  name: Joi.string().optional(),
+  fitnessWeigth: Joi.string().optional(),
+  fitnessStrength: Joi.string().optional(),
+  fitnessWellness: Joi.string().optional(),
+  aerobic: Joi.string().optional(),
+  strong: Joi.string().optional(),
+  health: Joi.string().optional(),
+  functions: Joi.string().optional(),
+  step: Joi.string().optional(),
+  impact: Joi.string().optional(),
+  special: Joi.string().optional(),
+  food: Joi.string().optional(),
   description: Joi.string().min(10).max(400).pattern(textFormat),
-  duration: Joi.string(),
-  training: Joi.string(),
+  duration: Joi.string().optional(),
+  training: Joi.string().optional(),
   avatarUrl: Joi.string(),
   location: Joi.string(),
   price: Joi.number(),
   comments: Joi.string().min(10).max(400).pattern(textFormat),
   category: Joi.string().trim(true).min(8).max(120).optional(),
+  nameYourProgram: Joi.string(),
+  typeYourProgram: Joi.string(),
   firstLogin: Joi.boolean(),
 });
 

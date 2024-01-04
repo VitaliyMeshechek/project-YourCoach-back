@@ -4,7 +4,7 @@ const cors = require("cors");
 
 const authRouter = require("./routes/api/users");
 const noticeRouter = require("./routes/api/notice");
-const programsRouter = require("./routes/api/cardProgram");
+const programRouter = require("./routes/api/programs");
 const swaggerUi = require("swagger-ui-express");
 const swaggerjsdoc = require("./swagger.json");
 const newsRouter = require("./routes/api/news");
@@ -29,7 +29,7 @@ app.use(express.static("public"));
 app.use("/api/users", authRouter);
 app.use("/api/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerjsdoc));
 app.use("/api/notices", noticeRouter);
-app.use("/api/cardPrograms", programsRouter);
+app.use("/api/programs", programRouter);
 app.use("/api/news", newsRouter);
 
 app.use((req, res) => {

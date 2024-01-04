@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
+
 const nameFormat = /^[а-яА-ЯёЁa-zA-Z0-9]{1,20}$/;
 // eslint-disable-next-line no-useless-escape
 const textFormat = /^([A-Za-z\-\']{1,400})|([А-Яа-я\-\']{1,400})$/;
@@ -91,6 +92,7 @@ const coachProgramSchema = new Schema(
     category: {
       type: String,
       enum: [
+        "your program",
         "fitnes for women",
         "weigth",
         "strength fitness",
@@ -123,7 +125,7 @@ const coachProgramSchema = new Schema(
   }
 );
 
-const coachesProgramsSchema = Joi.object({
+const addCoachProgramSchema = Joi.object({
   name: Joi.string(),
   fitnessWeigth: Joi.string(),
   fitnessStrength: Joi.string(),
@@ -139,7 +141,7 @@ const coachesProgramsSchema = Joi.object({
   description: Joi.string(),
   duration: Joi.string(),
   training: Joi.string(),
-  title: Joi.string().regex(nameFormat).trim().min(2).required(),
+  title: Joi.string().regex(nameFormat).trim().min(2),
   category: Joi.string(),
   location: Joi.string().regex(nameFormat).required(),
   comments: Joi.string().min(2).max(200).required(),
@@ -151,5 +153,5 @@ const Coach = model("coach", coachProgramSchema);
 
 module.exports = {
   Coach,
-  coachesProgramsSchema,
+  addCoachProgramSchema,
 };

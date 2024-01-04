@@ -1,4 +1,4 @@
-const { Coach } = require("../../models/coachesProgramsSchema");
+const { Coach } = require("../../models/coachProgramSchema");
 
 const { HttpError } = require("../../helpers/HttpError");
 // const gravatar = require("gravatar");
