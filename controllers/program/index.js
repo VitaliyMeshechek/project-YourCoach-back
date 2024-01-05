@@ -1,11 +1,11 @@
 const addUserProgram = require("./addUserProgram");
 const deleteUserProgram = require("./deleteUserProgram");
 const updateFieldUser = require("./updateFieldUser");
-const getCurrent = require("./getCurrent");
+const getCurrentPrograms = require("./getCurrentPrograms");
 
 module.exports = {
   addUserProgram,
   deleteUserProgram,
   updateFieldUser,
-  getCurrent,
+  getCurrentPrograms,
 };
