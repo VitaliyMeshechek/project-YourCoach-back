@@ -1,7 +1,8 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 // eslint-disable-next-line no-useless-escape
-const textFormat = /^([A-Za-z\-\']{1,400})|([А-Яа-я\-\']{1,400})$/;
+const textFormat = /^([A-Za-z\-\']{10,400})|([А-Яа-я\-\']{10,400})$/;
+const nameFormat = /^[а-яА-ЯёЁa-zA-Z0-9]{1,20}$/;
 
 const { handleMongooseError } = require("../helpers");
 
@@ -81,8 +82,8 @@ const programSchema = new Schema(
     },
     description: {
       type: String,
-      match: textFormat,
-      required: false,
+      // match: textFormat,
+      required: true,
     },
     duration: {
       type: String,
@@ -100,6 +101,10 @@ const programSchema = new Schema(
       enum: ["Персональні тренування", "Групові тренування"],
       required: false,
     },
+    title: {
+      type: String,
+      minlength: 2,
+    },
     avatarUrl: {
       type: String,
       required: true,
@@ -113,8 +118,8 @@ const programSchema = new Schema(
     },
     comments: {
       type: String,
-      match: textFormat,
-      required: false,
+      // match: textFormat,
+      required: true,
     },
     category: {
       type: String,
@@ -148,7 +153,7 @@ const programSchema = new Schema(
 
 programSchema.post("save", handleMongooseError);
 
-const programAddSchema = Joi.object({
+const addProgramUserSchema = Joi.object({
   name: Joi.string().optional(),
   fitnessWeigth: Joi.string().optional(),
   fitnessStrength: Joi.string().optional(),
@@ -164,23 +169,24 @@ const programAddSchema = Joi.object({
   description: Joi.string().min(10).max(400).pattern(textFormat),
   duration: Joi.string().optional(),
   training: Joi.string().optional(),
+  title: Joi.string().regex(nameFormat).trim().min(2),
   avatarUrl: Joi.string(),
   location: Joi.string(),
   price: Joi.number(),
-  comments: Joi.string().min(10).max(400).pattern(textFormat),
+  comments: Joi.string().min(10).max(400),
   category: Joi.string().trim(true).min(8).max(120).optional(),
   nameYourProgram: Joi.string(),
   typeYourProgram: Joi.string(),
   firstLogin: Joi.boolean(),
 });
 
-const programsSchemas = {
-  programAddSchema,
+const programUserSchema = {
+  addProgramUserSchema,
 };
 
 const Program = model("program", programSchema);
 
 module.exports = {
   Program,
-  programsSchemas,
+  programUserSchema,
 };

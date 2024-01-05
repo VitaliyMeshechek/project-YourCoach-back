@@ -2,7 +2,7 @@ const { Program } = require("../../models/programSchema");
 
 const { HttpError } = require("../../helpers");
 
-const addCoachProgram = async (req, res) => {
+const addUserProgram = async (req, res) => {
   const {
     photo,
     category,
@@ -38,7 +38,7 @@ const addCoachProgram = async (req, res) => {
 
     res.status(201).json(result);
   } else {
-    const coachProgramAvatar = await Program.create({
+    const userProgramAvatar = await Program.create({
       ...photo,
       category,
       nameYourProgram,
@@ -51,8 +51,8 @@ const addCoachProgram = async (req, res) => {
       owner: ownerId,
     });
 
-    res.status(201).json({ coachProgramAvatar });
+    res.status(201).json({ userProgramAvatar });
   }
 };
 
-module.exports = addCoachProgram;
+module.exports = addUserProgram;

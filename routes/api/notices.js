@@ -8,7 +8,7 @@ const {
   authenticate,
   upload,
 } = require("../../middlewares");
-const { addCoachProgramSchema } = require("../../models/coachProgramSchema");
+const { programUserSchema } = require("../../models/programSchema");
 const {
   getUserByCoaches,
   getCoachProgramByCategory,
@@ -16,7 +16,7 @@ const {
   addCoachRating,
   getUserByRating,
   deleteCoachRating,
-  deleteUserCoachProgram,
+  deleteCoachProgram,
   getAllCoaches,
 } = require("../../controllers/notice/notice");
 router.get("/", ctrlWrapper(getAllCoaches));
@@ -28,7 +28,7 @@ router.post(
   "/:categoryName",
   authenticate,
   upload.single("avatar"),
-  validateBody(addCoachProgramSchema),
+  validateBody(programUserSchema.addProgramUserSchema),
   ctrlWrapper(createNotice)
 );
 router.post(
@@ -44,11 +44,6 @@ router.delete(
   authenticate,
   ctrlWrapper(deleteCoachRating)
 );
-router.delete(
-  "/:id",
-  isValidId,
-  authenticate,
-  ctrlWrapper(deleteUserCoachProgram)
-);
+router.delete("/:id", isValidId, authenticate, ctrlWrapper(deleteCoachProgram));
 
 module.exports = router;

@@ -5,7 +5,7 @@ const ctrl = require("../../controllers/program");
 
 const { ctrlWrapper } = require("../../helpers");
 
-const { programsSchemas } = require("../../models/programSchema");
+const { programUserSchema } = require("../../models/programSchema");
 const { schemas } = require("../../models/userSchema");
 
 const {
@@ -16,18 +16,18 @@ const {
 } = require("../../middlewares");
 
 router.post(
-  "/program",
+  "/programs",
   authenticate,
-  validateBody(programsSchemas.programAddSchema),
+  validateBody(programUserSchema.addProgramUserSchema),
   upload.single("avatar"),
-  ctrlWrapper(ctrl.addCoachProgram)
+  ctrlWrapper(ctrl.addUserProgram)
 );
 
 router.delete(
-  "/program/:id",
+  "/programs/:id",
   authenticate,
   isValidId,
-  ctrlWrapper(ctrl.deleteCoachProgram)
+  ctrlWrapper(ctrl.deleteUserProgram)
 );
 
 router.get("/", authenticate, ctrlWrapper(ctrl.getCurrent));
