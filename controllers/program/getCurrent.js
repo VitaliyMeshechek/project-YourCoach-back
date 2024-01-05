@@ -1,6 +1,6 @@
 const { Program } = require("../../models/programSchema");
 
-const getCurrent = async (req, res) => {
+const getCurrentPrograms = async (req, res) => {
   const {
     name,
     fitnessWeigth,
@@ -58,4 +58,4 @@ const getCurrent = async (req, res) => {
   });
 };
 
-module.exports = getCurrent;
+module.exports = getCurrentPrograms;
