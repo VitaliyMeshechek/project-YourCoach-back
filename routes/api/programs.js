@@ -16,7 +16,7 @@ const {
 } = require("../../middlewares");
 
 router.post(
-  "/program",
+  "/programs",
   authenticate,
   validateBody(programUserSchema.addProgramUserSchema),
   upload.single("avatar"),
@@ -24,7 +24,7 @@ router.post(
 );
 
 router.delete(
-  "/program/:id",
+  "/programs/:id",
   authenticate,
   isValidId,
   ctrlWrapper(ctrl.deleteUserProgram)
