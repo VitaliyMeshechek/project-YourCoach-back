@@ -83,7 +83,7 @@ const programSchema = new Schema(
     description: {
       type: String,
       // match: textFormat,
-      required: true,
+      required: false,
     },
     duration: {
       type: String,
@@ -107,7 +107,7 @@ const programSchema = new Schema(
     },
     avatarUrl: {
       type: String,
-      required: true,
+      required: false,
     },
     location: {
       type: String,
@@ -119,7 +119,7 @@ const programSchema = new Schema(
     comments: {
       type: String,
       // match: textFormat,
-      required: true,
+      required: false,
     },
     category: {
       type: String,
@@ -133,11 +133,11 @@ const programSchema = new Schema(
     },
     nameYourProgram: {
       type: String,
-      required: true,
+      required: false,
     },
     typeYourProgram: {
       type: String,
-      required: true,
+      required: false,
     },
     firstLogin: {
       type: Boolean,
