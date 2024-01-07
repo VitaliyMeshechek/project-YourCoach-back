@@ -35,7 +35,7 @@ const noticeSchema = new Schema(
     },
     aerobic: {
       type: String,
-      enum: ["Step aerobics", "Fitball Aerobics", "Another"],
+      enum: ["Step Aerobics", "Fitball Aerobics", "Another"],
       required: false,
     },
     strong: {
@@ -166,7 +166,7 @@ const addNoticeSchema = Joi.object({
   impact: Joi.string().optional(),
   special: Joi.string().optional(),
   food: Joi.string().optional(),
-  description: Joi.string().min(10).max(400).pattern(textFormat),
+  description: Joi.string().min(10).max(400).regex(textFormat),
   duration: Joi.string().optional(),
   training: Joi.string().optional(),
   title: Joi.string().regex(nameFormat).trim().min(2),
