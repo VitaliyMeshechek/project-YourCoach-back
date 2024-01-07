@@ -8,7 +8,7 @@ const {
   authenticate,
   upload,
 } = require("../../middlewares");
-const { programUserSchema } = require("../../models/programSchema");
+const { noticesSchema } = require("../../models/noticeSchema");
 const {
   getUserByCoaches,
   getCoachProgramByCategory,
@@ -28,7 +28,7 @@ router.post(
   "/:categoryName",
   authenticate,
   upload.single("avatar"),
-  validateBody(programUserSchema.addProgramUserSchema),
+  validateBody(noticesSchema.addNoticeSchema),
   ctrlWrapper(createNotice)
 );
 router.post(

@@ -1,4 +1,4 @@
-const { Program } = require("../../models/programSchema");
+const { Notice } = require("../../models/noticeSchema");
 
 const { HttpError } = require("../../helpers/HttpError");
 // const gravatar = require("gravatar");
@@ -13,7 +13,7 @@ const createNotice = async (req, res, next) => {
     return res.status(400).json({ error: "Category is required" });
   }
 
-  const programNotice = await Program.create([
+  const programNotice = await Notice.create([
     {
       ...req.body,
       avatarUrl: req.file.path,
@@ -29,7 +29,7 @@ const addCoachRating = async (req, res) => {
   const { _id: userId } = req.user;
   const { id } = req.params;
 
-  const coach = await Program.findOne({ _id: id });
+  const coach = await Notice.findOne({ _id: id });
 
   if (!coach) {
     return res.status(404).json({ message: "Coach not found" });
@@ -85,13 +85,13 @@ const deleteCoachProgram = async (req, res, next) => {
 
   const { id } = req.params;
 
-  const deleteCoachProgram = await Program.findOne({ _id: id });
+  const deleteCoachProgram = await Notice.findOne({ _id: id });
 
   if (!deleteCoachProgram) {
     throw HttpError(404, "Coach program does not exist");
   }
 
-  await Program.findOneAndRemove({ _id: id, owner: userId });
+  await Notice.findOneAndRemove({ _id: id, owner: userId });
 
   res.status(200).json({ message: "Coach program successfully deleted" });
 };
@@ -101,7 +101,7 @@ const getCoachProgramByCategory = async (req, res) => {
   const { query: title, page, limit } = req.query;
   const skip = (page - 1) * limit;
   if (!title && !category) {
-    const allCoachesPrograms = await Program.find(
+    const allCoachesPrograms = await Notice.find(
       {},
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -111,7 +111,7 @@ const getCoachProgramByCategory = async (req, res) => {
     );
     res.status(200).json(allCoachesPrograms);
   } else if (category && !title && !id) {
-    const coachesProgramsByCategory = await Program.find(
+    const coachesProgramsByCategory = await Notice.find(
       { category },
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -122,7 +122,7 @@ const getCoachProgramByCategory = async (req, res) => {
     res.status(200).json(coachesProgramsByCategory);
   } else if (category && title && !id) {
     const regex = new RegExp(title, "i");
-    const coaches = await Program.find(
+    const coaches = await Notice.find(
       { category, title: { $regex: regex } },
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -133,7 +133,7 @@ const getCoachProgramByCategory = async (req, res) => {
     res.status(200).json(coaches);
   } else if (category && title && id) {
     const regex = new RegExp(title, "i");
-    const coaches = await Program.find(
+    const coaches = await Notice.find(
       { category, title: { $regex: regex }, _id: id },
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -143,7 +143,7 @@ const getCoachProgramByCategory = async (req, res) => {
     );
     res.status(200).json(coaches);
   } else if (id) {
-    const coach = await Program.findById(
+    const coach = await Notice.findById(
       id,
       "-createdAt -updatedAt -idCloudAvatar",
       {
@@ -175,7 +175,7 @@ const getUserByCoaches = async (req, res) => {
   const { page, limit } = req.query;
   const skip = (page - 1) * limit;
 
-  const coaches = await Program.find(
+  const coaches = await Notice.find(
     { owner: userId },
     "-createdAt -updatedAt",
     {
@@ -188,7 +188,7 @@ const getUserByCoaches = async (req, res) => {
 };
 
 const getAllCoaches = async (req, res) => {
-  const coaches = await Program.find();
+  const coaches = await Notice.find();
   res.status(200).json(coaches);
 };
 
