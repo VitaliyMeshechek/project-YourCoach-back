@@ -5,7 +5,6 @@ const { HttpError } = require("../../helpers/HttpError");
 const { User } = require("../../models/userSchema");
 
 const createNotice = async (req, res, next) => {
-  // const { email } = req.user;
   const { _id: owner } = req.user;
   const { categoryName } = req.params; // Get the category from req.query instead of req.body
 
@@ -16,7 +15,7 @@ const createNotice = async (req, res, next) => {
   const programNotice = await Notice.create([
     {
       ...req.body,
-      avatarUrl: req.file.path,
+      avatar: req.file.path,
       owner,
       category: categoryName, // Include the category in the notice object
     },

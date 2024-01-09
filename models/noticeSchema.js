@@ -82,7 +82,7 @@ const noticeSchema = new Schema(
     },
     description: {
       type: String,
-      // match: textFormat,
+      match: textFormat,
       required: false,
     },
     duration: {
@@ -105,7 +105,7 @@ const noticeSchema = new Schema(
       type: String,
       minlength: 2,
     },
-    avatarUrl: {
+    avatar: {
       type: String,
       required: false,
     },
@@ -170,7 +170,7 @@ const addNoticeSchema = Joi.object({
   duration: Joi.string().optional(),
   training: Joi.string().optional(),
   title: Joi.string().regex(nameFormat).trim().min(2),
-  avatarUrl: Joi.string(),
+  avatar: Joi.string(),
   location: Joi.string(),
   price: Joi.number(),
   comments: Joi.string().min(10).max(400),
