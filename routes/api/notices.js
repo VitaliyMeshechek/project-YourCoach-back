@@ -25,7 +25,7 @@ router.get("/rating", authenticate, ctrlWrapper(getUserByRating));
 router.get("/:categoryName/:id?", ctrlWrapper(getCoachProgramByCategory));
 
 router.post(
-  "/",
+  "/:categoryName",
   authenticate,
   upload.single("avatar"),
   validateBody(noticesSchema.addNoticeSchema),
