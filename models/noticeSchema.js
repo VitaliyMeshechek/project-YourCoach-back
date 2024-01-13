@@ -18,9 +18,42 @@ const noticeSchema = new Schema(
       ],
       required: false,
     },
+    kind: {
+      type: String,
+      enum: [
+      'Step Aerobics',
+      'Fitball Aerobics',
+      'Body Up',
+      'Body Pump',
+      'Тренування ABS',
+      'Йога',
+      'Пілатес',
+      'Ци-гун',
+      'Стретчінг',
+      'Калланетіка',
+      'Zumba',
+      'Dance Fitness',
+      'Belly Dance',
+      'Strip Dance',
+      ],
+      required: false,
+    },
     fitnessWeigth: {
       type: String,
       enum: ["Аеробіка", "Аеробний фітнес"],
+      required: false,
+    },
+    kindProgramWeigth: {
+      type: String,
+      enum: [
+        'Step-Intro',
+        'Step-B',
+        'Power-Step',
+        'Low-Impact Aerobics',
+        'Low-A',
+        'Middle-Impact',
+        'High-Impact',
+      ],
       required: false,
     },
     fitnessStrength: {
@@ -155,7 +188,9 @@ noticeSchema.post("save", handleMongooseError);
 
 const addNoticeSchema = Joi.object({
   name: Joi.string().optional(),
+  kind: Joi.string().optional(),
   fitnessWeigth: Joi.string().optional(),
+  kindProgramWeigth: Joi.string().optional(),
   fitnessStrength: Joi.string().optional(),
   fitnessWellness: Joi.string().optional(),
   aerobic: Joi.string().optional(),
