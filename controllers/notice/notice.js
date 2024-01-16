@@ -31,7 +31,7 @@ const addCoachRating = async (req, res) => {
   const coach = await Notice.findOne({ _id: id });
 
   if (!coach) {
-    return res.status(404).json({ message: "Coach not found" });
+    return res.status(404).json({ message: "Coach program not found" });
   }
 
   const rating = coach.rating || [];
@@ -159,7 +159,7 @@ const getCoachProgramByCategory = async (req, res) => {
     res.status(400).json({ error: "No search parameters provided" });
   }
 };
-
+ 
 const getUserByRating = async (req, res) => {
   const { _id: userId } = req.user;
   const coaches = await User.findById(userId)
