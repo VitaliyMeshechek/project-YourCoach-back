@@ -6,7 +6,6 @@ const { User } = require("../../models/userSchema");
 
 const createNotice = async (req, res, next) => {
   const { _id: owner } = req.user;
-  const {name, kind} = req.body;
   const { categoryName } = req.params; // Get the category from req.query instead of req.body
 
   if (!categoryName) {
@@ -16,8 +15,6 @@ const createNotice = async (req, res, next) => {
   const programNotice = await Notice.create([
     {
       ...req.body,
-      name,
-      kind,
       avatar: req.file.path,
       owner,
       category: categoryName, // Include the category in the notice object

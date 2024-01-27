@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
 // eslint-disable-next-line no-useless-escape
-const textFormat = /^([A-Za-z\-\']{10,400})|([А-Яа-я\-\']{10,400})$/;
+// const textFormat = /^([A-Za-z\-\']{10,400})|([А-Яа-я\-\']{10,400})$/;
 const nameFormat = /^[а-яА-ЯёЁa-zA-Z0-9]{1,20}$/;
 
 const { handleMongooseError } = require("../helpers");
@@ -115,7 +115,7 @@ const noticeSchema = new Schema(
     },
     description: {
       type: String,
-      match: textFormat,
+      // match: textFormat,
       required: false,
     },
     duration: {
@@ -201,7 +201,9 @@ const addNoticeSchema = Joi.object({
   impact: Joi.string().optional(),
   special: Joi.string().optional(),
   food: Joi.string().optional(),
-  description: Joi.string().min(10).max(400).regex(textFormat),
+  description: Joi.string()
+  .min(10).max(400),
+  // .regex(textFormat),
   duration: Joi.string().optional(),
   training: Joi.string().optional(),
   title: Joi.string().regex(nameFormat).trim().min(2),
