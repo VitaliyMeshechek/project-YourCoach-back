@@ -34,14 +34,14 @@ router.post(
 router.post(
   "/rating/:id",
   isValidId,
-  authenticate,
+  // authenticate,
   ctrlWrapper(addCoachRating)
 );
 
 router.delete(
   "/rating/:id",
   isValidId,
-  authenticate,
+  // authenticate,
   ctrlWrapper(deleteCoachRating)
 );
 router.delete("/:id", isValidId, authenticate, ctrlWrapper(deleteCoachProgram));
