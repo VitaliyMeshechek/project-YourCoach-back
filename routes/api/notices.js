@@ -21,7 +21,7 @@ const {
 } = require("../../controllers/notice/notice");
 router.get("/", ctrlWrapper(getAllCoaches));
 router.get("/own", authenticate, ctrlWrapper(getUserByCoaches));
-router.get("/rating", authenticate, ctrlWrapper(getUserByRating));
+router.get("/rating", ctrlWrapper(getUserByRating));
 router.get("/:categoryName/:id?", ctrlWrapper(getCoachProgramByCategory));
 
 router.post(
@@ -34,14 +34,14 @@ router.post(
 router.post(
   "/rating/:id",
   isValidId,
-  authenticate,
+  // authenticate,
   ctrlWrapper(addCoachRating)
 );
 
 router.delete(
   "/rating/:id",
   isValidId,
-  authenticate,
+  // authenticate,
   ctrlWrapper(deleteCoachRating)
 );
 router.delete("/:id", isValidId, authenticate, ctrlWrapper(deleteCoachProgram));
