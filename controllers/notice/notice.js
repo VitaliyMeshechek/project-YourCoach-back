@@ -25,10 +25,11 @@ const createNotice = async (req, res, next) => {
 };
 
 const addCoachRating = async (req, res) => {
-  const { _id: userId } = req.user;
+  // const { _id: userId } = req.user;
   const { id } = req.params;
 
-  const coach = await Notice.findOne({ _id: id });
+  // const coach = await Notice.findOne({ _id: id });
+  const coach = await Notice.findOne({ id });
 
   if (!coach) {
     return res.status(404).json({ message: "Coach program not found" });
@@ -36,22 +37,33 @@ const addCoachRating = async (req, res) => {
 
   const rating = coach.rating || [];
 
-  if (rating.includes(userId)) {
+  // if (rating.includes(userId)) {
+  //   throw new Error("Coach already added to ratings");
+  // }
+  if (rating.includes(id)) {
     throw new Error("Coach already added to ratings");
   }
 
-  await User.findByIdAndUpdate(userId, {
+  // await User.findByIdAndUpdate(userId, {
+  //   $push: { rating: { ...coach._doc, id } },
+  // });
+  await User.findByIdAndUpdate(id, {
     $push: { rating: { ...coach._doc, id } },
   });
 
+  // res.status(200).json({
+  //   rating: rating.concat({ userId, ...coach._doc }),
+  //   message: "Success",
+  // });
   res.status(200).json({
-    rating: rating.concat({ userId, ...coach._doc }),
+    rating: rating.concat({ id, ...coach._doc }),
     message: "Success",
   });
 };
 
 const deleteCoachRating = async (req, res, next) => {
-  const { _id: userId, rating } = req.user;
+  // const { _id: userId, rating } = req.user;
+  const { rating } = req.user;
   const { id } = req.params;
 
   const existingCoach = rating.find((item) => item.id === id);
@@ -63,7 +75,7 @@ const deleteCoachRating = async (req, res, next) => {
   }
 
   const updatedUser = await User.findByIdAndUpdate(
-    userId,
+    // userId,
     { $pull: { rating: { id } } },
     { new: true }
   );
