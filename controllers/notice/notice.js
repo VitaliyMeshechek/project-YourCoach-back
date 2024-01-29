@@ -24,11 +24,37 @@ const createNotice = async (req, res, next) => {
   res.status(200).json({ programNotice, message: "Successfully" });
 };
 
-const addCoachRating = async (req, res) => {
-  const { _id: userId } = req.user;
-  const { id } = req.params;
+// const addCoachRating = async (req, res) => {
+//   const { _id: userId } = req.user;
+//   const { id } = req.params;
 
-  const coach = await Notice.findOne({ _id: id });
+//   const coach = await Notice.findOne({ _id: id });
+
+//   if (!coach) {
+//     return res.status(404).json({ message: "Coach program not found" });
+//   }
+
+//   const rating = coach.rating || [];
+
+//   if (rating.includes(userId)) {
+//     throw new Error("Coach already added to ratings");
+//   }
+
+//   await User.findByIdAndUpdate(userId, {
+//     $push: { rating: { ...coach._doc, id } },
+//   });
+
+//   res.status(200).json({
+//     rating: rating.concat({ userId, ...coach._doc }),
+//     message: "Success",
+//   });
+// };
+
+const addCoachRating = async (req, res) => {
+  // const { _id: userId } = req.user;
+  const { _id: id } = req.params;
+
+  const coach = await Notice.findOne({ id });
 
   if (!coach) {
     return res.status(404).json({ message: "Coach program not found" });
@@ -36,24 +62,55 @@ const addCoachRating = async (req, res) => {
 
   const rating = coach.rating || [];
 
-  if (rating.includes(userId)) {
+  if (rating.includes(id)) {
     throw new Error("Coach already added to ratings");
   }
 
-  await User.findByIdAndUpdate(userId, {
+  await User.findByIdAndUpdate(id,{
     $push: { rating: { ...coach._doc, id } },
   });
 
   res.status(200).json({
-    rating: rating.concat({ userId, ...coach._doc }),
+    rating: rating.concat({ id, ...coach._doc }),
     message: "Success",
   });
 };
+console.log('addCoachRating', addCoachRating)
+
+// const deleteCoachRating = async (req, res, next) => {
+//   const { _id: userId, rating } = req.user;
+//   const { id } = req.params;
+
+//   const existingCoach = rating.find((item) => item.id === id);
+
+//   if (!existingCoach) {
+//     return res.status(409).json({
+//       message: "The coach is not in the rating",
+//     });
+//   }
+
+//   const updatedUser = await User.findByIdAndUpdate(
+//     userId,
+//     { $pull: { rating: { id } } },
+//     { new: true }
+//   );
+
+//   if (!updatedUser) {
+//     return res.status(404).json({ message: "User not found" });
+//   }
+
+//   res.status(200).json({
+//     rating: updatedUser.rating,
+//     id,
+//     message: "Successfully removed from rating",
+//   });
+// };
 
 const deleteCoachRating = async (req, res, next) => {
-  const { _id: userId, rating } = req.user;
-  const { id } = req.params;
+  const { rating } = req.body;
+  const { _id: id} = req.params;
 
+  console.log('deleteCoachRating', rating)
   const existingCoach = rating.find((item) => item.id === id);
 
   if (!existingCoach) {
@@ -63,7 +120,6 @@ const deleteCoachRating = async (req, res, next) => {
   }
 
   const updatedUser = await User.findByIdAndUpdate(
-    userId,
     { $pull: { rating: { id } } },
     { new: true }
   );
@@ -165,7 +221,7 @@ const getUserByRating = async (req, res) => {
   const coaches = await User.findById(userId)
     .populate("rating")
     .select("rating");
-
+console.log('getUserByRating', coaches)
   res.status(200).json(coaches.rating);
 };
 

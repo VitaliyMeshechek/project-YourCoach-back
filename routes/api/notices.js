@@ -32,7 +32,7 @@ router.post(
   ctrlWrapper(createNotice)
 );
 router.post(
-  "/rating/:id?",
+  "/rating/:id",
   isValidId,
   // authenticate,
   ctrlWrapper(addCoachRating)
