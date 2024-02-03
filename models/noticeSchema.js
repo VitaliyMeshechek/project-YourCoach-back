@@ -176,7 +176,6 @@ const noticeSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    // rating: [],
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",

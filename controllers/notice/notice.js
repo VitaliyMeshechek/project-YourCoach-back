@@ -1,10 +1,9 @@
 const { Notice } = require("../../models/noticeSchema");
 
 const { HttpError } = require("../../helpers/HttpError");
-// const gravatar = require("gravatar");
+
 const { User } = require("../../models/userSchema");
 
-const { Rating } = require("../../models/ratingSchema");
 
 const createNotice = async (req, res, next) => {
   const { _id: owner } = req.user;
@@ -56,8 +55,7 @@ const createNotice = async (req, res, next) => {
 // };
 
 
-const addCoachRating = async (req, res) => {
-  // const { _id: ownerId } = req.body;
+const addCoachFavorite = async (req, res) => {
   const { id } = req.params;
 
   const coach = await Notice.findOne({_id: id});
@@ -67,21 +65,18 @@ const addCoachRating = async (req, res) => {
     return res.status(404).json({ message: "Coach program not found" });
   }
 
-  // const rating = coach.rating || [];
-  // console.log('rating', rating)
-
   // if (rating.includes(id)) {
   //   throw new Error("Coach already added to ratings");
   // }
 
-  const updateRating = await User.findOneAndUpdate(id, {$push: { rating: { ...coach._doc, id}}})
-  console.log('updateRating', updateRating)
+  const updateFavorite = await User.findOneAndUpdate(id, {$push: { favotite: { ...coach._doc, id}}})
+  console.log('updateFavorite', updateFavorite)
   
 
   res.status(200).json({
-    rating: { ownerId: coach.owner, ...coach._doc },
+    favorite: { ownerId: coach.owner, ...coach._doc },
     id,
-    message: "Rating added successfully",
+    message: "Favorite coach added successfully",
   });
 };
 
@@ -115,33 +110,29 @@ const addCoachRating = async (req, res) => {
 //   });
 // };
 
-const deleteCoachRating = async (req, res) => {
-  // const { rating } = req.body;
+const deleteCoachFavorite = async (req, res) => {
   const { id } = req.params;
-
-  // const existingCoach = rating.find((item) => item.id === id);
-  // console.log('existingCoach', existingCoach)
 
   // if (!existingCoach) {
   //   return res.status(409).json({
   //     message: "The coach is not in the rating",
   //   });
   // }
-  const updatedUser = await User.findOneAndUpdate(
+  const updatedFavorite = await User.findOneAndUpdate(
     id,
     { $pull: { rating: { id }}},
     { new: true }
   );
 
-  console.log('updatedUser', updatedUser)
-  if (!updatedUser) {
-    return res.status(404).json({ message: "User not found" });
+  console.log('updatedFavorite', updatedFavorite)
+  if (!updatedFavorite) {
+    return res.status(404).json({ message: "Coach not found" });
   }
 
   res.status(200).json({
-    rating: updatedUser.rating,
+    favorite: updatedFavorite.favorite,
     id,
-    message: "Successfully removed from rating",
+    message: "Coach successfully removed from favorite",
   });
 };
 
@@ -236,15 +227,14 @@ const getCoachProgramByCategory = async (req, res) => {
 //   res.status(200).json(coaches.rating);
 // };
 
-const getUserByRating = async (req, res) => {
+const getCoachFavorite = async (req, res) => {
   const {ownerId} = req.body;
   const coaches = await User.findOne({ownerId})
-    .populate("rating")
-    .select("rating");
+    .populate("favorite")
+    .select("favorite");
     console.log('coaches', coaches)
-    // const rating = coaches.rating
-console.log('getUserByRating', coaches)
-  res.status(200).json(coaches.rating)
+console.log('getCoachFavorite', coaches)
+  res.status(200).json(coaches.favorite)
 };
 
 const getUserByCoaches = async (req, res) => {
@@ -273,9 +263,9 @@ module.exports = {
   getUserByCoaches,
   getCoachProgramByCategory,
   createNotice,
-  addCoachRating,
-  getUserByRating,
-  deleteCoachRating,
+  addCoachFavorite,
+  getCoachFavorite,
+  deleteCoachFavorite,
   deleteCoachProgram,
   getAllCoaches,
 };
