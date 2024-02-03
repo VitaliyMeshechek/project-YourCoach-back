@@ -176,6 +176,7 @@ const noticeSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    // favorite: [],
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",

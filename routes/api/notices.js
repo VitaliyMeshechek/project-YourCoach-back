@@ -22,7 +22,7 @@ const {
 router.get("/", ctrlWrapper(getAllCoaches));
 router.get("/own", authenticate, ctrlWrapper(getUserByCoaches));
 router.get(
-  "/rating", 
+  "/favorite", 
   // authenticate, 
   ctrlWrapper(getCoachFavorite));
 router.get("/:categoryName/:id?", ctrlWrapper(getCoachProgramByCategory));
@@ -35,14 +35,14 @@ router.post(
   ctrlWrapper(createNotice)
 );
 router.post(
-  "/rating/:id",
+  "/favorite/:id",
   isValidId,
   // authenticate,
   ctrlWrapper(addCoachFavorite)
 );
 
 router.delete(
-  "/rating/:id",
+  "/favorite/:id",
   isValidId,
   // authenticate,
   ctrlWrapper(deleteCoachFavorite)

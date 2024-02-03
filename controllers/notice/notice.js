@@ -25,31 +25,31 @@ const createNotice = async (req, res, next) => {
   res.status(200).json({ programNotice, message: "Successfully" });
 };
 
-// const addCoachRating = async (req, res) => {
+// const addCoachFavorite = async (req, res) => {
 //   const { _id: userId } = req.user;
 //   const { id } = req.params;
 
 //   const coach = await Notice.findOne({ _id: id });
-//   console.log('addCoachRating', coach)
+//   console.log('addCoachFavorite', coach)
 
 //   if (!coach) {
 //     return res.status(404).json({ message: "Coach program not found" });
 //   }
 
-//   const rating = coach.rating || [];
-//   console.log('rating', rating)
-//   if (rating.includes(userId)) {
+//   const favorite = coach.favorite || [];
+//   console.log('favorite', favorite)
+//   if (favorite.includes(userId)) {
 //     throw new Error("Coach already added to ratings");
 //   }
 
-//   const findRating = await User.findByIdAndUpdate(userId, {
-//     $push: { rating: { ...coach._doc, id } },
+//   const findFavorite = await User.findByIdAndUpdate(userId, {
+//     $push: { favorite: { ...coach._doc, id } },
 //   });
 
-//   console.log('findRating', findRating)
+//   console.log('findFavorite', findFavorite)
 
 //   res.status(200).json({
-//     rating: rating.concat({ userId, ...coach._doc }),
+//     favorite: favorite.concat({ userId, ...coach._doc }),
 //     message: "Success",
 //   });
 // };
@@ -68,34 +68,36 @@ const addCoachFavorite = async (req, res) => {
   // if (rating.includes(id)) {
   //   throw new Error("Coach already added to ratings");
   // }
+  //   const favorite = coach.favorite || [];
+  // console.log('favorite', favorite)
 
-  const updateFavorite = await User.findOneAndUpdate(id, {$push: { favotite: { ...coach._doc, id}}})
+
+  const updateFavorite = await User.findOneAndUpdate(id, {$push: { favorite: { ...coach._doc, id}}})
   console.log('updateFavorite', updateFavorite)
   
 
   res.status(200).json({
-    favorite: { ownerId: coach.owner, ...coach._doc },
-    id,
+    favorite: { coachId: coach.owner, ...coach._doc },
     message: "Favorite coach added successfully",
   });
 };
 
 
-// const deleteCoachRating = async (req, res, next) => {
-//   const { _id: userId, rating } = req.user;
+// const deleteCoachFavorite = async (req, res, next) => {
+//   const { _id: userId, favorite } = req.user;
 //   const { id } = req.params;
 
-//   const existingCoach = rating.find((item) => item.id === id);
+//   const existingCoach = favorite.find((item) => item.id === id);
 
 //   if (!existingCoach) {
 //     return res.status(409).json({
-//       message: "The coach is not in the rating",
+//       message: "The coach is not in the favorite",
 //     });
 //   }
 
 //   const updatedUser = await User.findByIdAndUpdate(
 //     userId,
-//     { $pull: { rating: { id } } },
+//     { $pull: { favorite: { id } } },
 //     { new: true }
 //   );
 
@@ -104,9 +106,9 @@ const addCoachFavorite = async (req, res) => {
 //   }
 
 //   res.status(200).json({
-//     rating: updatedUser.rating,
+//     favorite: updatedUser.favorite,
 //     id,
-//     message: "Successfully removed from rating",
+//     message: "Successfully removed from favorite",
 //   });
 // };
 
@@ -118,19 +120,19 @@ const deleteCoachFavorite = async (req, res) => {
   //     message: "The coach is not in the rating",
   //   });
   // }
-  const updatedFavorite = await User.findOneAndUpdate(
+  const updateUserFavorite = await User.findOneAndUpdate(
     id,
-    { $pull: { rating: { id }}},
+    { $pull: { favorite: { id }}},
     { new: true }
   );
 
-  console.log('updatedFavorite', updatedFavorite)
-  if (!updatedFavorite) {
+  console.log('updatedFavorite', updateUserFavorite)
+  if (!updateUserFavorite) {
     return res.status(404).json({ message: "Coach not found" });
   }
 
   res.status(200).json({
-    favorite: updatedFavorite.favorite,
+    favorite: updateUserFavorite.favorite,
     id,
     message: "Coach successfully removed from favorite",
   });
@@ -218,18 +220,18 @@ const getCoachProgramByCategory = async (req, res) => {
   }
 };
  
-// const getUserByRating = async (req, res) => {
+// const getCoachFavorite = async (req, res) => {
 //   const { _id: userId } = req.user;
 //   const coaches = await User.findById(userId)
-//     .populate("rating")
-//     .select("rating");
-// console.log('getUserByRating', coaches)
-//   res.status(200).json(coaches.rating);
+//     .populate("favorite")
+//     .select("favorite");
+// console.log('getCoachFavorite', coaches)
+//   res.status(200).json(coaches.favorite);
 // };
 
 const getCoachFavorite = async (req, res) => {
-  const {ownerId} = req.body;
-  const coaches = await User.findOne({ownerId})
+  const {coachId} = req.body;
+  const coaches = await User.findOne({coachId})
     .populate("favorite")
     .select("favorite");
     console.log('coaches', coaches)
