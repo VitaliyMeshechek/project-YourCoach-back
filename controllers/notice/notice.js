@@ -57,10 +57,10 @@ const createNotice = async (req, res, next) => {
 
 
 const addCoachRating = async (req, res) => {
-  const { _id: ownerId } = req.body;
+  // const { _id: ownerId } = req.body;
   const { id } = req.params;
 
-  const coach = await Notice.findOne({_id: id, ownerId});
+  const coach = await Notice.findOne({_id: id});
   console.log('coach', coach)
 
   if (!coach) {
@@ -80,6 +80,7 @@ const addCoachRating = async (req, res) => {
 
   res.status(200).json({
     rating: { ownerId: coach.owner, ...coach._doc },
+    id,
     message: "Rating added successfully",
   });
 };
