@@ -4,6 +4,8 @@ const { HttpError } = require("../../helpers/HttpError");
 // const gravatar = require("gravatar");
 const { User } = require("../../models/userSchema");
 
+const { Rating } = require("../../models/ratingSchema");
+
 const createNotice = async (req, res, next) => {
   const { _id: owner } = req.user;
   const { categoryName } = req.params; // Get the category from req.query instead of req.body
@@ -41,9 +43,11 @@ const createNotice = async (req, res, next) => {
 //     throw new Error("Coach already added to ratings");
 //   }
 
-//   await User.findByIdAndUpdate(userId, {
+//   const findRating = await User.findByIdAndUpdate(userId, {
 //     $push: { rating: { ...coach._doc, id } },
 //   });
+
+//   console.log('findRating', findRating)
 
 //   res.status(200).json({
 //     rating: rating.concat({ userId, ...coach._doc }),
@@ -51,30 +55,32 @@ const createNotice = async (req, res, next) => {
 //   });
 // };
 
-const addCoachRating = async (req, res) => {
-  // const { _id: userId } = req.user;
-  const { _id: id } = req.params;
 
-  const coach = await Notice.findOne({ id });
+const addCoachRating = async (req, res) => {
+  const { _id: ownerId } = req.body;
+  const { id } = req.params;
+
+  const coach = await Notice.findOne({_id: id, ownerId});
   console.log('coach', coach)
 
   if (!coach) {
     return res.status(404).json({ message: "Coach program not found" });
   }
 
-  const rating = coach.rating || [];
+  // const rating = coach.rating || [];
+  // console.log('rating', rating)
 
-  if (rating.includes(id)) {
-    throw new Error("Coach already added to ratings");
-  }
+  // if (rating.includes(id)) {
+  //   throw new Error("Coach already added to ratings");
+  // }
 
-  await Notice.findByIdAndUpdate(id,{
-    $push: { rating: { ...coach._doc, id } },
-  });
+  const updateRating = await User.findOneAndUpdate(id, {$push: { rating: { ...coach._doc, id}}})
+  console.log('updateRating', updateRating)
+  
 
   res.status(200).json({
-    rating: rating.concat({ ...coach._doc, id }),
-    message: "Success",
+    rating: { ownerId: coach.owner, ...coach._doc },
+    message: "Rating added successfully",
   });
 };
 
@@ -109,23 +115,24 @@ const addCoachRating = async (req, res) => {
 // };
 
 const deleteCoachRating = async (req, res) => {
-  // const { rating } = req.user;
+  // const { rating } = req.body;
   const { id } = req.params;
 
-  const existingCoach = await Notice.find({rating: id});
-  console.log('existingCoach', existingCoach)
+  // const existingCoach = rating.find((item) => item.id === id);
+  // console.log('existingCoach', existingCoach)
 
-  if (!existingCoach) {
-    return res.status(409).json({
-      message: "The coach is not in the rating",
-    });
-  }
-  const updatedUser = await Notice.findByIdAndUpdate(
+  // if (!existingCoach) {
+  //   return res.status(409).json({
+  //     message: "The coach is not in the rating",
+  //   });
+  // }
+  const updatedUser = await User.findOneAndUpdate(
     id,
     { $pull: { rating: { id }}},
     { new: true }
   );
 
+  console.log('updatedUser', updatedUser)
   if (!updatedUser) {
     return res.status(404).json({ message: "User not found" });
   }
@@ -137,38 +144,6 @@ const deleteCoachRating = async (req, res) => {
   });
 };
 
-// const deleteCoachRating = async (req, res, next) => {
-//   // const { rating } = req.body;
-//   const { _id: id} = req.params;
-
-//   // console.log('deleteCoachRating', rating)
-
-//   const updatedUser = await Notice.findByIdAndUpdate(
-//     id,
-//     { _id: id},
-//     { new: true }
-//   );
-
-//   if (!updatedUser) {
-//     return res.status(404).json({ message: "User not found" });
-//   }
-
-//   // res.status(200).json({
-//   //   rating: updatedUser.rating,
-//   //   id,
-//   //   message: "Successfully removed from rating",
-//   // });
-
-//   const existingCoach = updatedUser.find((item) => item.id === id);
-
-//   if (!existingCoach) {
-//     return res.status(409).json({
-//       message: "The coach is not in the rating",
-//     });
-//   }
-
-//   res.json({ message: "Delete success" }).json(existingCoach);
-// };
 
 const deleteCoachProgram = async (req, res, next) => {
   const { _id: userId } = req.user;
@@ -251,13 +226,24 @@ const getCoachProgramByCategory = async (req, res) => {
   }
 };
  
+// const getUserByRating = async (req, res) => {
+//   const { _id: userId } = req.user;
+//   const coaches = await User.findById(userId)
+//     .populate("rating")
+//     .select("rating");
+// console.log('getUserByRating', coaches)
+//   res.status(200).json(coaches.rating);
+// };
+
 const getUserByRating = async (req, res) => {
-  const { _id: userId } = req.user;
-  const coaches = await User.findById(userId)
+  const {ownerId} = req.body;
+  const coaches = await User.findOne({ownerId})
     .populate("rating")
     .select("rating");
+    console.log('coaches', coaches)
+    // const rating = coaches.rating
 console.log('getUserByRating', coaches)
-  res.status(200).json(coaches.rating);
+  res.status(200).json(coaches.rating)
 };
 
 const getUserByCoaches = async (req, res) => {

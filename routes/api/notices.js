@@ -21,7 +21,10 @@ const {
 } = require("../../controllers/notice/notice");
 router.get("/", ctrlWrapper(getAllCoaches));
 router.get("/own", authenticate, ctrlWrapper(getUserByCoaches));
-router.get("/rating", ctrlWrapper(getUserByRating));
+router.get(
+  "/rating", 
+  // authenticate, 
+  ctrlWrapper(getUserByRating));
 router.get("/:categoryName/:id?", ctrlWrapper(getCoachProgramByCategory));
 
 router.post(
