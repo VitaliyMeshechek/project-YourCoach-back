@@ -56,6 +56,7 @@ const userSchema = new Schema(
       default: true,
     },
     favorite: [],
+    rating: [],
     verify: {
       type: Boolean,
       default: false,
