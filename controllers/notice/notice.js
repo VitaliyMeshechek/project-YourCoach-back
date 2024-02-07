@@ -224,10 +224,16 @@ const getCoachProgramByCategory = async (req, res) => {
 };
 
 const getCoachRating = async (req, res) => {
-  const {id, } = req.body;
+  // const {id, like, dislike} = req.body;
+  const {id} = req.body;
   const coach = await User.findOne({id})
   console.log('getCounterRating', coach)
-  res.status(200).json(coach.rating);
+//   res.status(200).json({
+//     coach: {
+//     rating: [{...id, like, dislike}]
+//   },
+// });
+res.status(200).json(coach.rating);
 };
 
 const addCoachRating = async (req, res) => {
