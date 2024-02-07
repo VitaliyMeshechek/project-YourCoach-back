@@ -7,10 +7,12 @@ const {
 } = require("../../middlewares");
 
 const {
-  getCounterRating,
+  getCoachRating,
+  addCoachRating,
 } = require("../../controllers/notice/notice");
 
-router.post("/rating/:id", isValidId, ctrlWrapper(getCounterRating));
+router.get("/", ctrlWrapper(getCoachRating));
 
+router.post("/rating/:id", isValidId, ctrlWrapper(addCoachRating));
 
 module.exports = router;

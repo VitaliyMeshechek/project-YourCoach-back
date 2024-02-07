@@ -1,5 +1,5 @@
 const { Notice } = require("../../models/noticeSchema");
-const { nanoid } = require("../../node_modules/nanoid");
+// const { nanoid } = require("../../node_modules/nanoid");
 
 const { HttpError } = require("../../helpers/HttpError");
 
@@ -78,7 +78,9 @@ const addCoachFavorite = async (req, res) => {
   
 
   res.status(200).json({
-    favorite: { coachId: coach.owner, ...coach._doc },
+    coach: {
+      favorite: [{ coachId: coach.owner, ...coach._doc }]
+    },
     message: "Favorite coach added successfully",
   });
 };
@@ -221,49 +223,52 @@ const getCoachProgramByCategory = async (req, res) => {
   }
 };
 
-const getCounterRating = async (req, res) => {
+const getCoachRating = async (req, res) => {
+  const {id, } = req.body;
+  const coach = await User.findOne({id})
+  console.log('getCounterRating', coach)
+  res.status(200).json(coach.rating);
+};
+
+const addCoachRating = async (req, res) => {
+  const {like, dislike} = req.body;
   const {id} = req.params;
-  const rating = []
 
-    const objectLike = {
-    like: 1,
-  }
+  
+  // const rating = []
 
-  const objectDislike = {
-    dislike: 1,
-  }
-
-  // if (objectLike.like === 0) {
-  //   objectLike.like ++
+  // const objectLike = {
+  //   like: like += 1,
   // }
 
-  const total = objectDislike.dislike + objectLike.like
+  // const objectDislike = {
+  //   dislike: dislike += 1,
+  // }
 
-  const counter = Math.round((objectLike.like / total) * 100)
-  console.log('counter', counter)
+  // const total = objectDislike.dislike + objectLike.like
 
-  const amount = rating.push(counter)
-  console.log('amount', amount)
+  // const counter = Math.round((objectLike.like / total) * 100)
+  // console.log('counter', counter)
 
-  const showRating = {
-    amount: rating
-  }
+  // const amount = rating.push(counter)
+  // console.log('amount', amount)
+
+  // const showRating = {
+  //   amount: rating
+  // }
 
   const coach = await Notice.findOne({_id: id});
   console.log('coach', coach)
-  const feedback = coach.feedback || [];
-  console.log('feedback', feedback)
 
-  const result = await User.findOneAndUpdate(id,{$push: { rating: { ...coach._id, showRating }}});
-  console.log('result', result)
-  console.log('rating-rating', rating)
+  // const feedback = coach.feedback || [];
+  // console.log('feedback', feedback)
 
-  res.status(201).json({
-    id: nanoid(),
-    rating: feedback.concat({ ...coach._id, showRating}), 
-    message: "Rating added successfully",
-  });
-
+  // const result = await User.findOneAndUpdate(id,{$push: { rating: { ...coach._id, ...req.body }}});
+  // console.log('result', result)
+  const newObject = await User.findOneAndUpdate(id,{$push: {rating: {...coach._doc._id, like, dislike}}})
+  console.log('newObject', newObject)
+  //  "-email -password -name -experience -city -avatarUrl -phone -firstLogin -verify -createdAt -updatedAt -token -favorite"
+  res.status(201).json({newObject, message: "Rating added successfully"});
 }
 
 const addCoachLike = async (req, res) => {
@@ -296,31 +301,31 @@ const addCoachLike = async (req, res) => {
   });
 }
 
-const addCoachDislike = async (req, res) => {
-  const {dislike} = req.body;
-  // const { id } = req.params;
+// const addCoachDislike = async (req, res) => {
+//   const {dislike} = req.body;
+//   // const { id } = req.params;
 
-  const feedback = await Notice.find();
-  console.log('feedback', feedback)
+//   const feedback = await Notice.find();
+//   console.log('feedback', feedback)
 
-  const result = await User.findOneAndUpdate({$push: { rating: { ...feedback._doc, dislike}}});
-  console.log('result', result)
+//   const result = await User.findOneAndUpdate({$push: { rating: { ...feedback._doc, dislike}}});
+//   console.log('result', result)
 
-  res.status(201).json({
-    dislike,
-    rating: { ...feedback._doc, dislike}, 
-    message: "Dislike added successfully",
-  });
-}
+//   res.status(201).json({
+//     dislike,
+//     rating: { ...feedback._doc, dislike}, 
+//     message: "Dislike added successfully",
+//   });
+// }
 
-const getCoachRating = async (req, res) => {
-  const {id} = req.body;
-  const feedback = await User.findBuId(id)
-  .populate("rating")
-  .select("rating");
-  console.log('feedback', feedback)
-  res.status(200).json(feedback.rating)
-}
+// const getCoachRating = async (req, res) => {
+//   const {id} = req.body;
+//   const feedback = await User.findBuId(id)
+//   .populate("rating")
+//   .select("rating");
+//   console.log('feedback', feedback)
+//   res.status(200).json(feedback.rating)
+// }
  
 // const getCoachFavorite = async (req, res) => {
 //   const { _id: userId } = req.user;
@@ -371,7 +376,6 @@ module.exports = {
   deleteCoachProgram,
   getAllCoaches,
   addCoachLike,
-  addCoachDislike,
   getCoachRating,
-  getCounterRating,
+  addCoachRating,
 };

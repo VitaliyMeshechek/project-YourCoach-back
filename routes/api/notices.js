@@ -18,9 +18,6 @@ const {
   deleteCoachFavorite,
   deleteCoachProgram,
   getAllCoaches,
-  addCoachLike,
-  addCoachDislike,
-  getCounterRating,
 } = require("../../controllers/notice/notice");
 router.get("/", ctrlWrapper(getAllCoaches));
 router.get("/own", authenticate, ctrlWrapper(getUserByCoaches));
@@ -29,7 +26,6 @@ router.get(
   // authenticate, 
   ctrlWrapper(getCoachFavorite));
 router.get("/:categoryName/:id?", ctrlWrapper(getCoachProgramByCategory));
-router.post("/rating/:id", isValidId, ctrlWrapper(getCounterRating));
 
 router.post(
   "/:categoryName",
@@ -43,16 +39,6 @@ router.post(
   isValidId,
   // authenticate,
   ctrlWrapper(addCoachFavorite)
-);
-
-router.post(
-  "/rating/like",
-  ctrlWrapper(addCoachLike)
-);
-
-router.post(
-  "/rating/dislike",
-  ctrlWrapper(addCoachDislike)
 );
 
 router.delete(
