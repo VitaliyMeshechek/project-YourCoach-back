@@ -233,6 +233,7 @@ const getCoachRating = async (req, res) => {
 //     rating: [{...id, like, dislike}]
 //   },
 // });
+
 res.status(200).json(coach.rating);
 };
 
@@ -274,7 +275,7 @@ const addCoachRating = async (req, res) => {
   const newObject = await User.findOneAndUpdate(id,{$push: {rating: {...coach._doc._id, like, dislike}}})
   console.log('newObject', newObject)
   //  "-email -password -name -experience -city -avatarUrl -phone -firstLogin -verify -createdAt -updatedAt -token -favorite"
-  res.status(201).json({newObject, message: "Rating added successfully"});
+  res.status(201).json({newObject, _id: id, message: "Rating added successfully"});
 }
 
 const addCoachLike = async (req, res) => {
