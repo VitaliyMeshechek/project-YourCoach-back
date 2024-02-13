@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const { ctrlWrapper } = require("../../helpers");
-const {
-  isValidId,
-} = require("../../middlewares");
+// const {
+//   isValidId,
+// } = require("../../middlewares");
 
 const {
   getCoachRating,
@@ -13,6 +13,8 @@ const {
 
 router.get("/", ctrlWrapper(getCoachRating));
 
-router.post("/rating/:id", isValidId, ctrlWrapper(addCoachRating));
+router.post("/rating", 
+// isValidId, 
+ctrlWrapper(addCoachRating));
 
 module.exports = router;
