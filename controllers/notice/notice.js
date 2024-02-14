@@ -244,13 +244,13 @@ const addCoachRating = async (req, res) => {
   
   // const rating = []
 
-  // const objectLike = {
-  //   like: like += 1,
-  // }
+  const objectLike = {
+    like: like.length += 1,
+  }
 
-  // const objectDislike = {
-  //   dislike: dislike += 1,
-  // }
+  const objectDislike = {
+    dislike: dislike.length += 1,
+  }
 
   // const total = objectDislike.dislike + objectLike.like
 
@@ -272,7 +272,7 @@ const addCoachRating = async (req, res) => {
 
   // const result = await User.findOneAndUpdate(id,{$push: { rating: { ...coach._id, ...req.body }}});
   // console.log('result', result)
-  const newObject = await User.findOneAndUpdate(id,{$push: {rating: {...coach._doc._id, like, dislike}}})
+  const newObject = await User.findOneAndUpdate(id,{$push: {rating: {...coach._doc._id, objectLike, objectDislike}}})
   console.log('newObject', newObject)
   //  "-email -password -name -experience -city -avatarUrl -phone -firstLogin -verify -createdAt -updatedAt -token -favorite"
   res.status(201).json({newObject, _id: id, message: "Rating added successfully"});
