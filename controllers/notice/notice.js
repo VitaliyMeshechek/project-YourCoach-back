@@ -284,7 +284,7 @@ const addCoachRating = async (req, res) => {
 
   // const result = await User.findOneAndUpdate(id,{$push: { rating: { ...coach._id, ...req.body }}});
   // console.log('result', result)
-  const newObject = await User.findOneAndUpdate(id,{$push: {rating: {...programRating}}})
+  const newObject = await User.findOneAndUpdate(id,{$push: {rating: {...coach._doc._id, ...programRating}}})
 
   console.log('newObject', newObject.rating)
 
