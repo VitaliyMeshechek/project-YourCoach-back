@@ -56,7 +56,16 @@ const userSchema = new Schema(
       default: true,
     },
     favorite: [],
-    rating: [],
+    rating: [
+      {
+        like: Number,
+        // dislike: Number,
+      }
+    ],
+    totalrating: {
+      type: String,
+      default: 0,
+    },
     verify: {
       type: Boolean,
       default: false,

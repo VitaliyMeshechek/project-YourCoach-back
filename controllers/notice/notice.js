@@ -238,7 +238,7 @@ res.status(200).json(coach.rating);
 };
 
 const addCoachRating = async (req, res) => {
-  const {like, dislike} = req.body;
+  const {like, prodId} = req.body;
   const {id} = req.params;
 
   
@@ -263,16 +263,78 @@ const addCoachRating = async (req, res) => {
   // const showRating = {
   //   amount: rating
   // }
+   
 
-  const coach = await Notice.findOne({_id: id});
-  console.log('coach', coach)
+    // const product = await User.findOne({_id: prodId});
+    // console.log('product', product)
+    // const coach = await Notice.findOne({_id: id});
+    // console.log('coach', coach)
+    
+    // const alreadyRating = product.rating.find((ratingId) => ratingId)
+    // console.log('alreadyRating', alreadyRating)
 
-  const programRating = {
-    like: Number(like),
-    dislike: Number(dislike)
-  }
+    // if(alreadyRating) {
+    //   const checkRating = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike,}}, {new: true})
 
-  console.log('programRating.like', programRating.dislike)
+    //   res.status(201).json(checkRating)
+    // } 
+    const updateRating = await User.findOneAndUpdate(id,{$push: {rating: {like: like, _id: prodId}}}, {new: true})
+    console.log('updateRating', updateRating)
+
+    // res.status(201).json({updateRating, _id: id, message: "Rating added successfully"});
+    const alreadyRating = updateRating.rating.find((id) => id === prodId)
+    console.log('alreadyRating', alreadyRating)
+    if(alreadyRating) {
+    const newUpdateRating = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like}}, {new: true})
+    console.log('newUpdateRating', newUpdateRating)
+    res.status(201).json(newUpdateRating)
+    } 
+    // else {
+    //   const product = await User.findOneAndUpdate(id,{$push: {rating: {like: like}}}, {new: true})
+    //   console.log('product', product)
+    // }
+
+    const getAllRatings = await User.findOne({prodId})
+    console.log('getAllRatings', getAllRatings)
+    getAllRatings.totalrating = getAllRatings.rating.length
+    console.log('totalRating', getAllRatings.totalrating)
+    const feedback = getAllRatings.rating.reduce((acc, item) => acc + item.like, 0) 
+    console.log('feedback', feedback)   
+    const actualRating = Math.round((feedback / getAllRatings.totalrating) * 100)
+    console.log('actualRating', actualRating)
+
+    // if(totalRating) {
+    //   const finalRating = await User.findOneAndUpdate(id, {$push:{totalRating: actualRating}}, {new: true})
+    //   res.status(201).json(finalRating);
+    // }
+
+
+
+
+  // reduce(
+  //   (count, item) => {
+  //     if (item.like) {
+  //       count.like += 1 
+  //     } if (item.dislike) {
+  //         count.dislike += 1
+  //       } 
+  //       if (item.total) {
+  //         count.total = count.like + count.dislike
+  //       } if (item.feedback) {
+  //         count.feedback = Math.round((count.like / count.total) * 100)
+  //       }
+
+  //     return count;
+  //   },
+  //   { like: 0, dislike: 0, feedback: 0}
+  // );
+
+  // const programRating = {
+  //   like: Number(like),
+  //   dislike: Number(dislike)
+  // }
+
+  // console.log('programRating.like', programRating.dislike)
 
   // const percent = newObject.rating.reduce((acc, item) => item.rating + acc, 0) 
   // console.log('percent', percent)
@@ -284,12 +346,12 @@ const addCoachRating = async (req, res) => {
 
   // const result = await User.findOneAndUpdate(id,{$push: { rating: { ...coach._id, ...req.body }}});
   // console.log('result', result)
-  const newObject = await User.findOneAndUpdate(id,{$push: {rating: {...coach._doc._id, ...programRating}}})
+  // const newObject = await User.findOneAndUpdate(id,{$push: {rating: {...coach._doc._id, ...programRating}}})
 
-  console.log('newObject', newObject.rating)
+  // console.log('newObject', newObject.rating)
 
   //  "-email -password -name -experience -city -avatarUrl -phone -firstLogin -verify -createdAt -updatedAt -token -favorite"
-  res.status(201).json({newObject, _id: id, message: "Rating added successfully"});
+  // res.status(201).json({newObject, _id: id, message: "Rating added successfully"});
 }
 
 const addCoachLike = async (req, res) => {
