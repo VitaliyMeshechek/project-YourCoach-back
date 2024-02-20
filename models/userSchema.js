@@ -59,7 +59,7 @@ const userSchema = new Schema(
     rating: [
       {
         like: Number,
-        // dislike: Number,
+        dislike: Number,
       }
     ],
     totalrating: {

@@ -238,7 +238,7 @@ res.status(200).json(coach.rating);
 };
 
 const addCoachRating = async (req, res) => {
-  const {like, prodId} = req.body;
+  const {like, dislike, prodId} = req.body;
   const {id} = req.params;
 
   
@@ -278,14 +278,14 @@ const addCoachRating = async (req, res) => {
 
     //   res.status(201).json(checkRating)
     // } 
-    const updateRating = await User.findOneAndUpdate(id,{$push: {rating: {like: like, _id: prodId}}}, {new: true})
+    const updateRating = await User.findOneAndUpdate(id,{$push: {rating: {like: like, dislike: dislike, _id: prodId}}}, {new: true})
     console.log('updateRating', updateRating)
 
     // res.status(201).json({updateRating, _id: id, message: "Rating added successfully"});
     const alreadyRating = updateRating.rating.find((id) => id === prodId)
     console.log('alreadyRating', alreadyRating)
     if(alreadyRating) {
-    const newUpdateRating = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like}}, {new: true})
+    const newUpdateRating = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike}}, {new: true})
     console.log('newUpdateRating', newUpdateRating)
     res.status(201).json(newUpdateRating)
     } 
@@ -296,12 +296,22 @@ const addCoachRating = async (req, res) => {
 
     const getAllRatings = await User.findOne({prodId})
     console.log('getAllRatings', getAllRatings)
-    getAllRatings.totalrating = getAllRatings.rating.length
-    console.log('totalRating', getAllRatings.totalrating)
-    const feedback = getAllRatings.rating.reduce((acc, item) => acc + item.like, 0) 
-    console.log('feedback', feedback)   
-    const actualRating = Math.round((feedback / getAllRatings.totalrating) * 100)
+    // getAllRatings.totalrating = getAllRatings.rating.length
+    // console.log('totalRating', getAllRatings.totalrating)
+    const totalLike = getAllRatings.rating.reduce((acc, item) => acc + (item.like), 0)
+    console.log('totalLike', totalLike)
+    const totalDislike = getAllRatings.rating.reduce((acc, item) => acc + (item.dislike), 0)
+    console.log('totalDislike', totalDislike)
+    const totalFidback = totalLike + totalDislike;
+    console.log('totalFidback', totalFidback)
+    // const feedback = getAllRatings.rating.reduce((acc, item) => acc + item.like + item.dislike, 0) 
+    // console.log('feedback', feedback)   
+    // const actualRating = Math.round((feedback / getAllRatings.totalrating) * 100)
+    // console.log('actualRating', actualRating)
+    const actualRating = Math.round((totalLike / totalFidback) * 100)
     console.log('actualRating', actualRating)
+    getAllRatings.totalrating = actualRating
+    console.log('getAllRatings.totalrating', getAllRatings.totalrating)
 
     // if(totalRating) {
     //   const finalRating = await User.findOneAndUpdate(id, {$push:{totalRating: actualRating}}, {new: true})
@@ -462,3 +472,27 @@ module.exports = {
   getCoachRating,
   addCoachRating,
 };
+
+
+// const {like, dislike, prodId} = req.body;
+// const {id} = req.params;
+
+//   const updateRating = await User.findOneAndUpdate(id,{$push: {rating: {like: like, dislike: dislike, _id: prodId}}}, {new: true})
+//   console.log('updateRating', updateRating)
+
+//   const alreadyRating = updateRating.rating.find((id) => id === prodId)
+//   console.log('alreadyRating', alreadyRating)
+//   if(alreadyRating) {
+//   const newUpdateRating = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike}}, {new: true})
+//   console.log('newUpdateRating', newUpdateRating)
+//   res.status(201).json(newUpdateRating)
+//   } 
+
+//   const getAllRatings = await User.findOne({prodId})
+//   console.log('getAllRatings', getAllRatings)
+//   getAllRatings.totalrating = getAllRatings.rating.length
+//   console.log('totalRating', getAllRatings.totalrating)
+//   const feedback = getAllRatings.rating.reduce((acc, item) => acc + item.like + item.dislike, 0) 
+//   console.log('feedback', feedback)   
+//   const actualRating = Math.round((feedback / getAllRatings.totalrating) * 100)
+//   console.log('actualRating', actualRating)
