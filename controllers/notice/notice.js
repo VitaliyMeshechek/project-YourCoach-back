@@ -237,197 +237,71 @@ const getCoachRating = async (req, res) => {
 res.status(200).json(coach.rating);
 };
 
-const addCoachRating = async (req, res) => {
-  const {like, dislike, prodId} = req.body;
-  const {id} = req.params;
-
-  
-  // const rating = []
-
-  // const objectLike = {
-  //   like: like.length,
-  // }
-
-  // const objectDislike = {
-  //   dislike: dislike.length,
-  // }
-
-  // const total = objectDislike.dislike + objectLike.like
-
-  // const counter = Math.round((objectLike.like / total) * 100)
-  // console.log('counter', counter)
-
-  // const amount = rating.push(counter)
-  // console.log('amount', amount)
-
-  // const showRating = {
-  //   amount: rating
-  // }
+// const addCoachRating = async (req, res) => {
+//   const {like, dislike, prodId} = req.body;
+//   const {id} = req.params;
    
 
-    // const product = await User.findOne({_id: prodId});
-    // console.log('product', product)
-    // const coach = await Notice.findOne({_id: id});
-    // console.log('coach', coach)
+//     // const product = await User.findOne({_id: prodId});
+//     // console.log('product', product)
+//     // const coach = await Notice.findOne({_id: id});
+//     // console.log('coach', coach)
     
-    // const alreadyRating = product.rating.find((ratingId) => ratingId)
-    // console.log('alreadyRating', alreadyRating)
+//     // const alreadyRating = product.rating.find((ratingId) => ratingId)
+//     // console.log('alreadyRating', alreadyRating)
 
-    // if(alreadyRating) {
-    //   const checkRating = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike,}}, {new: true})
+//     // if(alreadyRating) {
+//     //   const checkRating = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike,}}, {new: true})
 
-    //   res.status(201).json(checkRating)
-    // } 
-    const updateRating = await User.findOneAndUpdate(id,{$push: {rating: {like: like, dislike: dislike, _id: prodId}}}, {new: true})
-    console.log('updateRating', updateRating)
+//     //   res.status(201).json(checkRating)
+//     // } 
+//     const updateRating = await User.findOneAndUpdate(id,{$push: {rating: {like: like, dislike: dislike, _id: prodId}}}, {new: true})
+//     console.log('updateRating', updateRating)
 
-    // res.status(201).json({updateRating, _id: id, message: "Rating added successfully"});
-    const alreadyRating = updateRating.rating.find((id) => id === prodId)
-    console.log('alreadyRating', alreadyRating)
-    if(alreadyRating) {
-    const newUpdateRating = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike}}, {new: true})
-    console.log('newUpdateRating', newUpdateRating)
-    res.status(201).json(newUpdateRating)
-    } 
-    // else {
-    //   const product = await User.findOneAndUpdate(id,{$push: {rating: {like: like}}}, {new: true})
-    //   console.log('product', product)
-    // }
-
-    const getAllRatings = await User.findOne({prodId})
-    console.log('getAllRatings', getAllRatings)
-    // getAllRatings.totalrating = getAllRatings.rating.length
-    // console.log('totalRating', getAllRatings.totalrating)
-    const totalLike = getAllRatings.rating.reduce((acc, item) => acc + (item.like), 0)
-    console.log('totalLike', totalLike)
-    const totalDislike = getAllRatings.rating.reduce((acc, item) => acc + (item.dislike), 0)
-    console.log('totalDislike', totalDislike)
-    const totalFidback = totalLike + totalDislike;
-    console.log('totalFidback', totalFidback)
-    // const feedback = getAllRatings.rating.reduce((acc, item) => acc + item.like + item.dislike, 0) 
-    // console.log('feedback', feedback)   
-    // const actualRating = Math.round((feedback / getAllRatings.totalrating) * 100)
-    // console.log('actualRating', actualRating)
-    const actualRating = Math.round((totalLike / totalFidback) * 100)
-    console.log('actualRating', actualRating)
-    getAllRatings.totalrating = actualRating
-    console.log('getAllRatings.totalrating', getAllRatings.totalrating)
-
-    // if(totalRating) {
-    //   const finalRating = await User.findOneAndUpdate(id, {$push:{totalRating: actualRating}}, {new: true})
-    //   res.status(201).json(finalRating);
-    // }
+//     // res.status(201).json({updateRating, _id: id, message: "Rating added successfully"});
+//     const alreadyRating = updateRating.rating.find((id) => id === prodId)
+//     console.log('alreadyRating', alreadyRating)
+//     if(alreadyRating) {
+//     const newUpdateRating = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike}}, {new: true})
+//     console.log('newUpdateRating', newUpdateRating)
+//     res.status(201).json(newUpdateRating)
+//     } 
 
 
+//     const getAllRatings = await User.findOne({prodId})
+//     console.log('getAllRatings', getAllRatings)
+//     // getAllRatings.totalrating = getAllRatings.rating.length
+//     // console.log('totalRating', getAllRatings.totalrating)
+//     const totalLike = getAllRatings.rating.reduce((acc, item) => acc + (item.like), 0)
+//     console.log('totalLike', totalLike)
+//     const totalDislike = getAllRatings.rating.reduce((acc, item) => acc + (item.dislike), 0)
+//     console.log('totalDislike', totalDislike)
+//     const totalFidback = totalLike + totalDislike;
+//     console.log('totalFidback', totalFidback)
+//     const actualRating = Math.round((totalLike / totalFidback) * 100)
+//     console.log('actualRating', actualRating)
+//     getAllRatings.totalrating = actualRating
+//     console.log('getAllRatings.totalrating', getAllRatings.totalrating)
 
-
-  // reduce(
-  //   (count, item) => {
-  //     if (item.like) {
-  //       count.like += 1 
-  //     } if (item.dislike) {
-  //         count.dislike += 1
-  //       } 
-  //       if (item.total) {
-  //         count.total = count.like + count.dislike
-  //       } if (item.feedback) {
-  //         count.feedback = Math.round((count.like / count.total) * 100)
-  //       }
-
-  //     return count;
-  //   },
-  //   { like: 0, dislike: 0, feedback: 0}
-  // );
-
-  // const programRating = {
-  //   like: Number(like),
-  //   dislike: Number(dislike)
-  // }
-
-  // console.log('programRating.like', programRating.dislike)
-
-  // const percent = newObject.rating.reduce((acc, item) => item.rating + acc, 0) 
-  // console.log('percent', percent)
-
-  // const numProgramRating = 
-
-  // const feedback = coach.feedback || [];
-  // console.log('feedback', feedback)
-
-  // const result = await User.findOneAndUpdate(id,{$push: { rating: { ...coach._id, ...req.body }}});
-  // console.log('result', result)
-  // const newObject = await User.findOneAndUpdate(id,{$push: {rating: {...coach._doc._id, ...programRating}}})
-
-  // console.log('newObject', newObject.rating)
-
-  //  "-email -password -name -experience -city -avatarUrl -phone -firstLogin -verify -createdAt -updatedAt -token -favorite"
-  // res.status(201).json({newObject, _id: id, message: "Rating added successfully"});
-}
-
-const addCoachLike = async (req, res) => {
-  // const {like} = req.body;
-  // const like = 0;
-  // const dislike = 0;
-  // const total = like + dislike;
-  // const counter = Math.round((like / total) * 100)
-  // // const { id } = nanoid();
-  // const objectLike = {
-  //   like: like.length,
-  //   id: nanoid()
-  // }
-
-  // const objectDislike = {
-  //   dislike: dislike.length,
-  //   id: nanoid()
-  // }
-
-
-  const feedback = await Notice.find();
-  console.log('feedback', feedback)
-
-  const result = await User.findOneAndUpdate({$push: { rating: { ...feedback._doc }}});
-  console.log('result', result)
-
-  res.status(201).json({
-    rating: { ...feedback._doc}, 
-    message: "Like added successfully",
-  });
-}
-
-// const addCoachDislike = async (req, res) => {
-//   const {dislike} = req.body;
-//   // const { id } = req.params;
-
-//   const feedback = await Notice.find();
-//   console.log('feedback', feedback)
-
-//   const result = await User.findOneAndUpdate({$push: { rating: { ...feedback._doc, dislike}}});
-//   console.log('result', result)
-
-//   res.status(201).json({
-//     dislike,
-//     rating: { ...feedback._doc, dislike}, 
-//     message: "Dislike added successfully",
-//   });
+//   //  "-email -password -name -experience -city -avatarUrl -phone -firstLogin -verify -createdAt -updatedAt -token -favorite"
+//   // res.status(201).json({newObject, _id: id, message: "Rating added successfully"});
 // }
 
-// const getCoachRating = async (req, res) => {
-//   const {id} = req.body;
-//   const feedback = await User.findBuId(id)
-//   .populate("rating")
-//   .select("rating");
-//   console.log('feedback', feedback)
-//   res.status(200).json(feedback.rating)
-// }
- 
-// const getCoachFavorite = async (req, res) => {
-//   const { _id: userId } = req.user;
-//   const coaches = await User.findById(userId)
-//     .populate("favorite")
-//     .select("favorite");
-// console.log('getCoachFavorite', coaches)
-//   res.status(200).json(coaches.favorite);
-// };
+const addCoachRating = async (req, res) => {
+
+  const {id} = req.params;
+
+  const data = {
+      product_id: id,
+      like: req.body.rating.like,
+      dislike: req.body.rating.dislike,
+  }
+
+  const review = await User.create(data)
+  res.status(200).send(review)
+
+}
+
 
 const getCoachFavorite = async (req, res) => {
   const {coachId} = req.body;
@@ -468,7 +342,6 @@ module.exports = {
   deleteCoachFavorite,
   deleteCoachProgram,
   getAllCoaches,
-  addCoachLike,
   getCoachRating,
   addCoachRating,
 };
