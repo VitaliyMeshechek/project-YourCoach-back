@@ -298,7 +298,7 @@ const addCoachRating = async (req, res) => {
   }
 
   const review = await User.create(data)
-  res.status(200).send(review)
+  res.status(200).json(review)
 
 }
 
