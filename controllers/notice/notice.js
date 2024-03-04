@@ -264,7 +264,7 @@ const addCoachRating = async (req, res) => {
     if(alreadyRating) {
     const review = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike}}, {new: true})
     console.log('review', review)
-    res.status(201).json(review)
+    res.status(201).json(updateRating.review)
     } 
 
 
