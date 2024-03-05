@@ -259,13 +259,13 @@ const addCoachRating = async (req, res) => {
     console.log('updateRating', updateRating)
 
     // res.status(201).json({updateRating, _id: id, message: "Rating added successfully"});
-    const alreadyRating = updateRating.rating.find((id) => id === prodId)
-    console.log('alreadyRating', alreadyRating)
-    if(alreadyRating) {
-    const review = await User.updateOne({rating: {$elemMatch: alreadyRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike}}, {new: true})
+    // const alreadyRating = updateRating.rating.find((id) => id === prodId)
+    // console.log('alreadyRating', alreadyRating)
+  
+    const review = await User.updateOne({rating: {$elemMatch: updateRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike}}, {new: true})
     console.log('review', review)
     res.status(201).json(review)
-    } 
+
 
 
     const getAllRatings = await User.findOne({prodId})
