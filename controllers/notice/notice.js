@@ -261,6 +261,22 @@ const addCoachRating = async (req, res) => {
     // res.status(201).json({updateRating, _id: id, message: "Rating added successfully"});
     // const alreadyRating = updateRating.rating.find((id) => id === prodId)
     // console.log('alreadyRating', alreadyRating)
+    const getAllRatings = updateRating.rating.find((prodId) => prodId)
+    console.log('getAllRatings', getAllRatings)
+    // getAllRatings.totalrating = getAllRatings.rating.length
+    // console.log('totalRating', getAllRatings.totalrating)
+    const totalReduce = updateRating.rating.reduce((acc, item) => acc + item.like, 0)
+    console.log('totalReduce', totalReduce)
+    const totalLike = getAllRatings.like += 1
+    console.log('totalLike', totalLike)
+    const totalDislike = getAllRatings.dislike += 1
+    console.log('totalDislike', totalDislike)
+    const totalFidback = totalLike + totalDislike;
+    console.log('totalFidback', totalFidback)
+    const actualRating = Math.round((totalLike / totalFidback) * 100)
+    console.log('actualRating', actualRating)
+    // getAllRatings.totalrating = actualRating
+    // console.log('getAllRatings.totalrating', getAllRatings.totalrating)
   
     const review = await User.updateOne({rating: {$elemMatch: updateRating}}, {$set: {"rating.$.like": like, "rating.$.dislike": dislike}}, {new: true})
     console.log('review', review)
@@ -268,20 +284,7 @@ const addCoachRating = async (req, res) => {
 
 
 
-    const getAllRatings = await User.findOne({prodId})
-    console.log('getAllRatings', getAllRatings)
-    // getAllRatings.totalrating = getAllRatings.rating.length
-    // console.log('totalRating', getAllRatings.totalrating)
-    const totalLike = getAllRatings.rating.reduce((acc, item) => acc + (item.like), 0)
-    console.log('totalLike', totalLike)
-    const totalDislike = getAllRatings.rating.reduce((acc, item) => acc + (item.dislike), 0)
-    console.log('totalDislike', totalDislike)
-    const totalFidback = totalLike + totalDislike;
-    console.log('totalFidback', totalFidback)
-    const actualRating = Math.round((totalLike / totalFidback) * 100)
-    console.log('actualRating', actualRating)
-    getAllRatings.totalrating = actualRating
-    console.log('getAllRatings.totalrating', getAllRatings.totalrating)
+
 
   //  "-email -password -name -experience -city -avatarUrl -phone -firstLogin -verify -createdAt -updatedAt -token -favorite"
   // res.status(201).json({newObject, _id: id, message: "Rating added successfully"});
